@@ -9,17 +9,18 @@
 public boolean GAMEOVER;
 public boolean VICTORY;
 
-
 //Mapping fields
 public final int mapWidth = 9, mapHeight = 9;
 public final float marginPercent = 0.2;
-public final color[] tileColors = new color[] {0, 128, 100}; //{0, #ff6666, #66ff66, #6666ff, #ffff66, #66ffff};
+public final color[] tileColors = new color[] {0, 64, 96}; //{0, #ff6666, #66ff66, #6666ff, #ffff66, #66ffff};
 public GraphicalTileMap map;
 
 //Turn-based fields
 public int turnCount;
 
 //Render fields
+public float render_width;
+public float render_height;
 public float x, y, w, h; //x:mapOffsetX, y:mapOffsetY, w:mapDisplayWidth, h:mapDisplayHeight
 public float tileWidth; //Variable that describes the width of a tile;
 public float tileHeight; //Variable that describes the height of a tile;
@@ -32,7 +33,12 @@ public GameObjectHandler objects;
 public void setup() {
   //Settings
   size(800, 800);
+
   smooth(12);
+  ellipseMode(CORNER);
+  //strokeWeight(min(tileWidth, tileHeight)*0.014);
+  //stroke(0);
+  noStroke();
   //Initialize.
   init();
 }
@@ -66,7 +72,10 @@ public void init() {
 
 //Method that calculates where to display the map in the screen.
 public void calculateDisplayVariables() {
-  float smallestDimension = min(width, height);
+  float render_width = width;
+  float render_height = height;
+
+  float smallestDimension = min(render_width, render_height);
   /***
    Here we are creating a margin effect for the displayed map
    by scaling down the map display area accordingly to the 'marginPercent' variable,
@@ -74,15 +83,12 @@ public void calculateDisplayVariables() {
    ***/
   w = smallestDimension*(1-marginPercent);
   h = w;
-  x = (width-w)/2;
-  y = (height-h)/2;
+  x = (render_width-w)/2;
+  y = (render_height-h)/2;
 
   float tileSize = min(w/mapWidth, h/mapHeight);
   tileWidth = tileSize;
   tileHeight = tileSize;
-
-  stroke(0);
-  strokeWeight(min(tileWidth, tileHeight)*0.014);
 }
 //returns if the tile value is in range of the map-dimensions.
 public boolean tileIsValid(IVector tilePosition) {
@@ -110,15 +116,67 @@ public boolean tileIsOccupiedByObject(IVector tilePosition) {
 }
 
 //Method that draws and updates the map, objects, ect.
-public void draw() {  
+public void draw() {
   //Update
   objects.update();
 
   //Draw
+  background(64);
   map.draw(x, y, tileWidth, tileHeight, tileColors);
   objects.draw(x, y, tileWidth, tileHeight);
-  println(frameRate);
+  drawHealthBar(tileWidth*0.2, tileHeight*0.2, tileWidth*0.8, tileHeight*0.8);
+  //println(frameRate);
 }
+
+public void drawHealthBar(float x, float y, float w, float h) {
+  float w2 = w*0.9;
+  pushMatrix();
+  translate(x, y);
+  for (int i = player.health_max-1; i >= 0; i--) {
+    fill(192-i*30);
+    ellipse(i*w2, 0, w, h);
+  }
+
+  boolean heartBlink = player.armor <= 0;
+
+  for (int i = 0; i < player.health; i++) {
+    //Draw Hearts
+    float x2 = w2*i;
+    if (i == player.health-1 && heartBlink) {
+      float n = sin(frameCount*0.1)*30;
+      fill(164+n, n, n);
+    } else {
+      fill(#880000);
+    }
+    beginShape();
+    vertex(x2+w*0.25, 0);
+    vertex(x2+w*0.5, h*0.25);
+    vertex(x2+w*0.75, 0);
+    vertex(x2+w, h*0.50);
+    vertex(x2+w*0.5, h);
+    vertex(x2, h*0.50);
+    endShape(CLOSE);
+  }
+  for (int i = 0; i < player.armor; i++) {
+    //Draw Shields
+    float x2 = w2*i;
+    float c = 64+i*20;
+
+    if (i == player.armor-1 && !heartBlink) {
+      float n = sin(frameCount*0.1)*15;
+      c+= n;
+    }
+    fill(c);
+    beginShape();
+    vertex(x2+w*0.5, 0);
+    vertex(x2+0, h*0.5);
+    vertex(x2+w*0.5, h);
+    vertex(x2+w, h*0.5);
+    endShape(CLOSE);
+  }
+  popMatrix();
+}
+
 public void onTurn() {
   if (!GAMEOVER) {
     player.onTurn(turnCount);

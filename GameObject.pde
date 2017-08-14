@@ -64,7 +64,7 @@ public abstract class GameObject {
 
   //Method that walks in a given direction.
   public boolean walkInDirection(Direction direction) {
-    //Calculate 
+    //Calculate
     IVector newPosition = this.position.copy();
     newPosition.x += direction.x;
     newPosition.y += direction.y;

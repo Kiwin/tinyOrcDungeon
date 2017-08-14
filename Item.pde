@@ -109,12 +109,17 @@ public class shd_Shield extends itm_Shield {
     super("Shield", 1);
   }
   public void draw(float x, float y, float tileWidth, float tileHeight) {
+    float shieldWidth = tileWidth*0.3;
+    float shieldHeight = tileHeight*0.3;
+    float shieldKnotWidth = tileWidth*0.1;
+    float shieldKnotHeight = tileHeight*0.1;
+
     pushMatrix();
     translate(x, y);
     fill(#663300);
-    ellipse(0, 0, tileWidth*0.3, tileHeight*0.3);
+    ellipse(-shieldWidth*0.5, -shieldHeight*0.5, shieldWidth, shieldHeight);
     fill(128);
-    ellipse(0, 0, tileWidth*0.1, tileHeight*0.1);
+    ellipse(-shieldKnotWidth*0.5, -shieldKnotHeight*0.5, shieldKnotWidth, shieldKnotHeight);
     popMatrix();
   }
 }
