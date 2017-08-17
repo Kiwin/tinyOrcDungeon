@@ -10,13 +10,13 @@ enum Race {
   }
 }
 public enum Direction {
-  NORTH("North", 0, -1),
-    NORTH_EAST("North-east", 1, -1),
-    NORTH_WEST("North-west", -1, -1),
-    EAST("East", 1, 0),
-    WEST("West", -1, 0),
-    SOUTH("South", 0, 1),
-    SOUTH_EAST("South-east", 1, 1),
+  NORTH("North", 0, -1), 
+    NORTH_EAST("North-east", 1, -1), 
+    NORTH_WEST("North-west", -1, -1), 
+    EAST("East", 1, 0), 
+    WEST("West", -1, 0), 
+    SOUTH("South", 0, 1), 
+    SOUTH_EAST("South-east", 1, 1), 
     SOUTH_WEST("South-west", -1, 1);
 
   public final float x, y;
@@ -32,9 +32,9 @@ public enum Team {
 }
 
 public enum Material {
-  WOOD("Wood", 1, #663300),
-    IRON("Iron", 2, #666666),
-    COBALT("Cobalt", 3, #666699);
+  WOOD("Wood", 1, #663300), 
+    IRON("Iron", 2, #999999), 
+    COBALT("Cobalt", 3, #6666ff);
 
   public final String name;
   public final color colour;

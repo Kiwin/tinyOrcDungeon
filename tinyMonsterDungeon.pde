@@ -132,34 +132,45 @@ public void drawHealthBar(float x, float y, float w, float h) {
   float w2 = w*0.9;
   pushMatrix();
   translate(x, y);
-  for (int i = player.health_max-1; i >= 0; i--) {
-    fill(192-i*30);
-    ellipse(i*w2, 0, w, h);
-  }
 
-  boolean heartBlink = player.getArmor() <= 0;
+  int bars = player.health_max-1+player.getArmor();
 
-  for (int i = 0; i < player.getHealth()+ player.getArmor(); i++) {
+  for (int i = 0; i <= bars; i++) {
     //Draw Hearts
     float x2 = w2*i;
-    if (i == player.health-1 && heartBlink) {
-      float n = sin(frameCount*0.1)*30;
-      fill(164+n, n, n);
-    } else {
-      fill(#880000);
+    //Draw Shields
+    float c = 120+i*20;
+    if (i == bars) {
+      float n = sin(frameCount*0.1)*15;
+      c+= n;
     }
-    beginShape();
-    vertex(x2+w*0.25, 0);
-    vertex(x2+w*0.5, h*0.25);
-    vertex(x2+w*0.75, 0);
-    vertex(x2+w, h*0.50);
-    vertex(x2+w*0.5, h);
-    vertex(x2, h*0.50);
-    endShape(CLOSE);
+    fill(c);
+    if (i > player.health-1) {
+      beginShape();
+      vertex(x2+w*0.5, 0);
+      vertex(x2+0, h*0.5);
+      vertex(x2+w*0.5, h);
+      vertex(x2+w, h*0.5);
+      endShape(CLOSE);
+    } else {
+      if (i == bars) {
+        float n = sin(frameCount*0.1)*30;
+        fill(164+n, n, n);
+      } else {
+        fill(#880000);
+      }
+      beginShape();
+      vertex(x2+w*0.25, 0);
+      vertex(x2+w*0.5, h*0.25);
+      vertex(x2+w*0.75, 0);
+      vertex(x2+w, h*0.50);
+      vertex(x2+w*0.5, h);
+      vertex(x2, h*0.50);
+      endShape(CLOSE);
+    }
   }
   popMatrix();
 }
-
 public void onTurn() {
   if (!GAMEOVER) {
     player.onTurn(turnCount);

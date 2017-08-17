@@ -20,17 +20,24 @@ public abstract class gObj_Humanoid extends GameObject {
     float victoryShake = sin(n*2)*tileWidth*0.1;
     float victoryHeadShake = sin(n*2)*tileWidth*0.05;
     boolean dance = GAMEOVER || VICTORY;
+    float headX = x+tileWidth*0.4;
+    float headY = y+tileWidth*0.35+(dance?victoryHeadShake:normalShake);
+    float headW = tileWidth*0.2;
+    float headH = tileWidth*0.2;
     //Body
     fill(255);
     rect(x+tileWidth*0.3, y+tileHeight*0.50, tileWidth*0.4, tileHeight*0.5);
     //Head
     fill(this.race.skinColor);
-    rect(x+tileWidth*0.4, y+tileWidth*0.35+(dance?victoryHeadShake:normalShake), tileWidth*0.2, tileHeight*0.2);
+    rect(headX, headY, headW, headH);
     if (this.rightHandItem != null) {
       this.rightHandItem.draw(x+tileWidth*0.8, y+tileWidth*0.6-(dance?victoryShake:normalShake), tileWidth, tileHeight);
     }
     if (this.leftHandItem != null) {
       this.leftHandItem.draw(x+tileWidth*0.2, y+tileWidth*0.6-(dance?victoryShake:normalShake), tileWidth, tileHeight);
+    }
+    if (this.helmet != null) {
+      this.helmet.draw(headX, headY, headW, headH);
     }
   }
 
@@ -60,5 +67,41 @@ public abstract class gObj_Humanoid extends GameObject {
       arm += this.chestplate.getArmor();
     }
     return arm;
+  }
+  @Override
+    public void takeDamage(int damagePoints) {
+    int dmg = damagePoints;
+    if (this.helmet != null) {
+      dmg = this.helmet.blockDamage(dmg);
+    }
+    if (this.chestplate != null) {
+      dmg = this.chestplate.blockDamage(dmg);
+    }
+    if (dmg > 0) {
+      this.health -= dmg;
+      //onTakeDamage
+    }
+  }
+  public void onTurn(int turnCount) {
+    if (this.rightHandItem != null) {
+      if (this.rightHandItem.isBroken()) {
+        this.rightHandItem = null;
+      }
+    }
+    if (this.leftHandItem != null) {
+      if (this.leftHandItem.isBroken()) {
+        this.leftHandItem = null;
+      }
+    }
+    if (this.helmet != null) {
+      if (this.helmet.isBroken()) {
+        this.helmet = null;
+      }
+    }
+    if (this.chestplate != null) {
+      if (this.chestplate.isBroken()) {
+        this.chestplate = null;
+      }
+    }
   }
 }
