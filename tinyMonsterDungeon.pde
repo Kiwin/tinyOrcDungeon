@@ -137,9 +137,9 @@ public void drawHealthBar(float x, float y, float w, float h) {
     ellipse(i*w2, 0, w, h);
   }
 
-  boolean heartBlink = player.armor <= 0;
+  boolean heartBlink = player.getArmor() <= 0;
 
-  for (int i = 0; i < player.health; i++) {
+  for (int i = 0; i < player.getHealth()+ player.getArmor(); i++) {
     //Draw Hearts
     float x2 = w2*i;
     if (i == player.health-1 && heartBlink) {
@@ -155,23 +155,6 @@ public void drawHealthBar(float x, float y, float w, float h) {
     vertex(x2+w, h*0.50);
     vertex(x2+w*0.5, h);
     vertex(x2, h*0.50);
-    endShape(CLOSE);
-  }
-  for (int i = 0; i < player.armor; i++) {
-    //Draw Shields
-    float x2 = w2*i;
-    float c = 64+i*20;
-
-    if (i == player.armor-1 && !heartBlink) {
-      float n = sin(frameCount*0.1)*15;
-      c+= n;
-    }
-    fill(c);
-    beginShape();
-    vertex(x2+w*0.5, 0);
-    vertex(x2+0, h*0.5);
-    vertex(x2+w*0.5, h);
-    vertex(x2+w, h*0.5);
     endShape(CLOSE);
   }
   popMatrix();

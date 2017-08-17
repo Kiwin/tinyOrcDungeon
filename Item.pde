@@ -7,48 +7,83 @@ public abstract class Item {
     this.name = name;
     face_right = true;
   }
-
   public abstract void draw(float x, float y, float tileWidth, float tileHeight);
+  public void use(GameObject caster) {
+    this.onUse(caster);
+  }
+  protected abstract void onUse(GameObject caster);
 }
 
 public abstract class itm_Shield extends Item {
-  public final int armor;
+  private int armor;
   public itm_Shield(String name, int arm) {
     super(name);
     this.armor = arm;
   }
 }
-public abstract class itm_Armor extends Item {
-  public final int armor;
-  public itm_Armor(String name, int arm) {
+public abstract class itm_Tool extends Item {
+
+  public final Material material_primary;
+  protected int durability;
+  public itm_Tool(String name, Material material_primary) {
     super(name);
-    this.armor = arm;
+    this.material_primary = material_primary;
+    this.durability = material_primary.effeciency;
+  }
+  public boolean isBroken() {
+    return this.durability > 0;
   }
 }
-public abstract class itm_Weapon extends Item {
-  public final int damage;
-  public itm_Weapon(String name, int dmg) {
-    super(name);
-    this.damage = dmg;
+public abstract class itm_Armor extends itm_Tool {
+  private int armor;
+  protected final Material material_secondary;
+
+  public itm_Armor(String name, Material material_primary) {
+    super(name, material_primary);
+  }
+
+  public int getArmor() {
+    return this.armor;
+  }
+  public int takeDamage(int damage){
+    int dmg = damage - this.durability;
+    this.durability -= damage;
+  if(dmg > 0){
+    return dmg;
+  }else{
+    return 0;
+  }
+}
+public abstract class itm_Weapon extends itm_Tool {
+
+  protected final Material material_secondary;
+
+  public itm_Weapon(String name, Material material_primary, Material material_secondary) {
+    super(name, material_primary);
+    this.material_secondary = material_secondary;
+  }
+  public int getStrength() {
+    return this.material_secondary.effeciency;
   }
 }
 
 public abstract class arm_Helmet extends itm_Armor {
-  public arm_Helmet(String name, int arm) {
-    super(name, arm);
+  public arm_Helmet(String name, Material material_primary) {
+    super(name, material_primary);
   }
 }
 public abstract class arm_Chestplate extends itm_Armor {
 
-  public arm_Chestplate(String name, int arm) {
-    super(name, arm);
+
+  public arm_Chestplate(String name, Material material_primary, Material material_secondary) {
+    super(name, material_primary);
   }
 }
 
 public class wep_Sword extends itm_Weapon {
 
-  public wep_Sword() {
-    super("Sword", 1);
+  public wep_Sword(Material material_primary, Material material_secondary) {
+    super("Sword", material_primary, material_secondary);
   }
   public void draw(float x, float y, float tileWidth, float tileHeight) {
     pushMatrix();
@@ -61,23 +96,25 @@ public class wep_Sword extends itm_Weapon {
     float swordHandleHeight = tileHeight*0.1;
 
     //Draw blade
-    fill(128);
+    fill(material_secondary.colour);
     rect(-swordBladeWidth/2, 0, swordBladeWidth, -swordBladeHeight);
     //Draw Parry
     rect(-swordParryWidth/2, 0, swordParryWidth, swordParryHeight);
     //Draw Handle
-    fill(#663300);
+    fill(material_primary.colour);
     rect(-swordHandleWidth/2, swordParryHeight, swordHandleWidth, swordHandleHeight);
 
     popMatrix();
   }
+  public void onUse(GameObject caster) {
+  }
 }
 public class wep_Axe extends itm_Weapon {
 
-  public wep_Axe() {
-    super("Axe", 1);
+  public wep_Axe(Material material_primary, Material material_secondary) {
+    super("Axe", material_primary, material_secondary);
   }
-  public void draw(float x, float y, float tileWidth, float tileHeight) {    
+  public void draw(float x, float y, float tileWidth, float tileHeight) {
     float axeHandleWidth = tileWidth*0.05;
     float axeHandleHeight = tileHeight*0.3;
     float axeHeadWidth = tileWidth*0.1;
@@ -90,10 +127,10 @@ public class wep_Axe extends itm_Weapon {
       scale(-1, 1);
     }
     //Draw Handle
-    fill(#663300);
+    fill(material_primary.colour);
     rect(-axeHandleWidth/2, -axeHandleHeight/3, axeHandleWidth, axeHandleHeight);
     //Draw Head
-    fill(128);
+    fill(material_secondary.colour);
     beginShape();
     vertex(0, -axeHandleHeight/3);
     vertex(axeHeadWidth, axeHeadHeight-axeHandleHeight/3);
@@ -101,6 +138,8 @@ public class wep_Axe extends itm_Weapon {
     endShape(CLOSE);
 
     popMatrix();
+  }
+  public void onUse(GameObject caster) {
   }
 }
 
@@ -121,5 +160,7 @@ public class shd_Shield extends itm_Shield {
     fill(128);
     ellipse(-shieldKnotWidth*0.5, -shieldKnotHeight*0.5, shieldKnotWidth, shieldKnotHeight);
     popMatrix();
+  }
+  public void onUse(GameObject caster) {
   }
 }

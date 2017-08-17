@@ -10,7 +10,6 @@ public abstract class GameObject {
 
   //Combat fields
   protected int health; //Variable describes the GameObjects current health.
-  protected int armor; //Variable describes the GameObjects current armor.
   protected int health_max; //Variable describes how much health the GameObject maximum can have.
   protected int strength; //Variable describes how much damage the GameObject can deal.
   private boolean healable; //Variable used to dictate of the GameObject can heal.
@@ -120,10 +119,6 @@ public abstract class GameObject {
     return !tileIsOccupied(position);
   }
 
-  //---Getters and Setters---//
-  public void getHealth() {
-  }
-
   public void kill() {
     this.health = 0;
     this.healable = false;
@@ -132,8 +127,14 @@ public abstract class GameObject {
   private void onAttack(GameObject target) {
     render_position.add(target.position.toPVector()).div(2);
   }
+  //---Getters and Setters---//
+  public int getHealth() {
+    return this.health;
+  }
 
   //---Abstract methods---//
+  public abstract int getStrength();
+  public abstract int getArmor();
   public abstract void update();
   public abstract void draw(float xOffset, float yOffset, float tileWidth, float tileHeight);
 

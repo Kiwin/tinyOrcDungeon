@@ -1,7 +1,7 @@
 public abstract class gObj_Humanoid extends GameObject {
 
-  public Item rightHandItem;
-  public Item leftHandItem;
+  public itm_Tool rightHandItem;
+  public itm_Tool leftHandItem;
   public arm_Helmet helmet;
   public arm_Chestplate chestplate;
 
@@ -39,5 +39,26 @@ public abstract class gObj_Humanoid extends GameObject {
     if (this.render_position.dist(this.position.toPVector()) < 0.01) {
       this.render_position = this.position.toPVector();
     }
+  }
+
+  public int getStrength() {
+    int str = this.strength;
+    if (this.rightHandItem != null && this.rightHandItem instanceof itm_Weapon) {
+      str += ((itm_Weapon) this.rightHandItem).getStrength();
+    }
+    if (this.leftHandItem != null && this.leftHandItem instanceof itm_Weapon) {
+      str += ((itm_Weapon) this.leftHandItem).getStrength();
+    }
+    return str;
+  }
+  public int getArmor() {
+    int arm = 0;
+    if (this.helmet != null) {
+      arm += this.helmet.getArmor();
+    }
+    if (this.chestplate != null) {
+      arm += this.chestplate.getArmor();
+    }
+    return arm;
   }
 }

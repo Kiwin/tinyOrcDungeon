@@ -7,19 +7,19 @@ public class gObj_Orc extends gObj_Humanoid {
     moveTurnOffset = round(random(1));
     float ran = random(1);
     if (ran < 0.20) {
-      rightHandItem = new wep_Sword();
+      rightHandItem = new wep_Sword(Material.WOOD, Material.IRON);
     } else if (ran < 0.40) {
-      rightHandItem = new wep_Axe();
+      rightHandItem = new wep_Axe(Material.WOOD, Material.IRON);
     } else if (ran < 0.60) {
-      rightHandItem = new shd_Shield();
+      rightHandItem = new wep_Sword(Material.IRON, Material.COBALT);
     }
     ran = random(1);
     if (ran < 0.20) {
-      leftHandItem = new wep_Sword();
+      leftHandItem = new wep_Sword(Material.WOOD, Material.IRON);
     } else if (ran < 0.40) {
-      leftHandItem = new wep_Axe();
+      leftHandItem = new wep_Axe(Material.WOOD, Material.IRON);
     } else if (ran < 0.60) {
-      leftHandItem = new shd_Shield();
+      leftHandItem = new wep_Sword(Material.IRON, Material.COBALT);
     }
     if (leftHandItem != null) {
       leftHandItem.face_right = false;
