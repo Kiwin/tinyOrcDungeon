@@ -56,6 +56,7 @@ public abstract class itm_Armor extends Item {
         return damage - this.durability;
       } else {
         this.durability -= damage;
+        return 0;
       }
     }
     return damage;

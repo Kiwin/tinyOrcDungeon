@@ -68,6 +68,7 @@ public abstract class gObj_Humanoid extends GameObject {
     }
     return arm;
   }
+
   @Override
     public void takeDamage(int damagePoints) {
     int dmg = damagePoints;
