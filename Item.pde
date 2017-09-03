@@ -7,7 +7,7 @@ public abstract class Item {
     this.name = name;
     face_right = true;
   }
-  public abstract void draw(float x, float y, float tileWidth, float tileHeight);
+  public abstract void draw(float x, float y, float w, float h);
   public void use(GameObject caster) {
     this.onUse(caster);
   }
@@ -96,7 +96,7 @@ public class arm_Chestplate extends itm_Armor {
   public arm_Chestplate(Material material_primary) {
     super("Chestplate", material_primary);
   }
-  public void draw(float x, float y, float tileWidth, float tileHeight) {
+  public void draw(float x, float y, float w, float h) {
   }
   public void onUse(GameObject caster) {
   }

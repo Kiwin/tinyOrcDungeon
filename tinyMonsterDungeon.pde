@@ -133,48 +133,48 @@ public void drawHealthBar(float x, float y, float w, float h) {
   pushMatrix();
   translate(x, y);
 
-  int bars = player.health_max-1+player.getArmor();
-
-  for (int i = 0; i <= bars; i++) {
+  for (int i = 0; i < player.getHealth(); i++) {
     //Draw Hearts
     float x2 = w2*i;
-    //Draw Shields
+    if (i == player.getHealth()-1 && player.getArmor() == 0) {
+      float n = sin(frameCount*0.1)*30;
+      fill(164+n, n, n);
+    } else {
+      fill(#880000);
+    }
+    beginShape();
+    vertex(x2+w*0.25, 0);
+    vertex(x2+w*0.5, h*0.25);
+    vertex(x2+w*0.75, 0);
+    vertex(x2+w, h*0.50);
+    vertex(x2+w*0.5, h);
+    vertex(x2, h*0.50);
+    endShape(CLOSE);
+  }
+
+  //Draw Shields
+  for (int i = player.getHealth(); i < player.getHealth()+player.getArmor(); i++) {
+    float x2 = w2*i;
     float c = 120+i*20;
-    if (i == bars) {
+    if (i == player.getHealth()+player.getArmor()-1) {
       float n = sin(frameCount*0.1)*15;
       c+= n;
     }
     fill(c);
-    if (i > player.health-1) {
-      beginShape();
-      vertex(x2+w*0.5, 0);
-      vertex(x2+0, h*0.5);
-      vertex(x2+w*0.5, h);
-      vertex(x2+w, h*0.5);
-      endShape(CLOSE);
-    } else {
-      if (i == bars) {
-        float n = sin(frameCount*0.1)*30;
-        fill(164+n, n, n);
-      } else {
-        fill(#880000);
-      }
-      beginShape();
-      vertex(x2+w*0.25, 0);
-      vertex(x2+w*0.5, h*0.25);
-      vertex(x2+w*0.75, 0);
-      vertex(x2+w, h*0.50);
-      vertex(x2+w*0.5, h);
-      vertex(x2, h*0.50);
-      endShape(CLOSE);
-    }
+    beginShape();
+    vertex(x2+w*0.5, 0);
+    vertex(x2+0, h*0.5);
+    vertex(x2+w*0.5, h);
+    vertex(x2+w, h*0.5);
+    endShape(CLOSE);
   }
   popMatrix();
 }
 public void onTurn() {
   if (!GAMEOVER) {
-    player.onTurn(turnCount);
+    objects.onTurnBegin(turnCount);
     objects.onTurn(turnCount);
+    objects.onTurnEnd(turnCount);
     turnCount++;
     if (!player.isAlive()) {
       GAMEOVER = true;
@@ -194,30 +194,31 @@ void mouseClicked() {
 }
 void mouseWheel(MouseEvent me) {
 }
-void keyPressed() {
-  //if (keyCode == CODED) {
-  // key = char(keyCode);
-  //}
-  boolean actionPerformed = false;
+void keyPressed() { 
   switch(key) {
-  case 'w':
-    actionPerformed = player.moveOrAttack(Direction.NORTH);
-    break;
-  case 's':
-    actionPerformed = player.moveOrAttack(Direction.SOUTH);
-    break;
-  case 'a':
-    actionPerformed = player.moveOrAttack(Direction.WEST);
-    break;
-  case 'd':
-    actionPerformed = player.moveOrAttack(Direction.EAST);
-    break;
   case 'n':
     init();
     break;
   }
-  if (actionPerformed) {
-    onTurn();
+  if (!GAMEOVER && !VICTORY) {
+    boolean actionPerformed = false;
+    switch(key) {
+    case 'w':
+      actionPerformed = player.moveOrAttack(Direction.NORTH);
+      break;
+    case 's':
+      actionPerformed = player.moveOrAttack(Direction.SOUTH);
+      break;
+    case 'a':
+      actionPerformed = player.moveOrAttack(Direction.WEST);
+      break;
+    case 'd':
+      actionPerformed = player.moveOrAttack(Direction.EAST);
+      break;
+    }
+    if (actionPerformed) {
+      onTurn();
+    }
   }
 }
 void keyReleased() {

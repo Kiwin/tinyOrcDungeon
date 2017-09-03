@@ -140,5 +140,7 @@ public abstract class GameObject {
 
   //---Abstract "listeners"---//
   public abstract void onDeath(); //Should be called once when the GameObject dies.
-  public abstract void onTurn(int turnCount); //Should be called once when a turn ends.
+  public abstract void onTurnBegin(int turnCount); //Should be called first and once when a turn ends.
+  public abstract void onTurn(int turnCount); //Should be called once between onTurnBegin and onTurnEnd is called.
+  public abstract void onTurnEnd(int turnCount); //Should be called last and once when a turn ends.
 }

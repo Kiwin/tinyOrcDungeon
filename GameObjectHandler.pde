@@ -34,9 +34,21 @@ public class GameObjectHandler extends ArrayList<GameObject> {
     }
   }
   //Method that calls all objects in the lists onTurn method.
+  public void onTurnBegin(int turnCount) {
+    for (GameObject obj : this) {
+      obj.onTurnBegin(turnCount);
+    }
+    garbageCollect();
+  }
   public void onTurn(int turnCount) {
     for (GameObject obj : this) {
       obj.onTurn(turnCount);
+    }
+    garbageCollect();
+  }
+  public void onTurnEnd(int turnCount) {
+    for (GameObject obj : this) {
+      obj.onTurnEnd(turnCount);
     }
     garbageCollect();
   }

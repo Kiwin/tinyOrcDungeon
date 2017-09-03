@@ -83,7 +83,11 @@ public abstract class gObj_Humanoid extends GameObject {
       //onTakeDamage
     }
   }
+  public void onTurnBegin(int turnCount) {
+  }
   public void onTurn(int turnCount) {
+  }
+  public void onTurnEnd(int turnCount) {
     if (this.rightHandItem != null) {
       if (this.rightHandItem.isBroken()) {
         this.rightHandItem = null;

@@ -34,7 +34,8 @@ public enum Team {
 public enum Material {
   WOOD("Wood", 1, #663300), 
     IRON("Iron", 2, #999999), 
-    COBALT("Cobalt", 3, #6666ff);
+    COBALT("Cobalt", 3, #6666ff),
+    HELLRITE("Hellrite", 4, #ff6666);
 
   public final String name;
   public final color colour;
