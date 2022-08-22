@@ -49,18 +49,14 @@ public class TileMap {
   }
 }
 
-public class GraphicalTileMap extends TileMap {
+public class TileMapRenderer {
 
-  public GraphicalTileMap(int mapWidth, int mapHeight) {
-    super(mapWidth, mapHeight);
-  }
-
-  public void draw(float xOffset, float yOffset, float tileWidth, float tileHeight, color[] tileColors) {
-    for (int i = 0; i < this.mapWidth; i++) {
-      for (int j = 0; j < this.mapHeight; j++) {
+  public void draw(TileMap map, float xOffset, float yOffset, float tileWidth, float tileHeight, color[] tileColors) {
+    for (int i = 0; i < map.mapWidth; i++) {
+      for (int j = 0; j < map.mapHeight; j++) {
 
         //Select tile
-        Tile currentTile = this.getTile(i, j);
+        Tile currentTile = map.getTile(i, j);
 
         //Calculate tile position
         float tileX = xOffset+i*tileWidth;

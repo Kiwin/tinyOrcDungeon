@@ -7,7 +7,8 @@ public final int mapWidth = 9;
 public final int mapHeight = 9;
 public final float marginPercent = 0.2;
 public final color[] tileColors = new color[] {0, 64, 96}; //{0, #ff6666, #66ff66, #6666ff, #ffff66, #66ffff};
-public GraphicalTileMap map;
+public TileMap map;
+TileMapRenderer mapRenderer;
 
 //Game-flow fields
 public int turnCount;
@@ -47,8 +48,11 @@ public void init() {
   turnCount = 0;
   GAMEOVER = false;
   VICTORY = false;
+  
+  mapRenderer = new TileMapRenderer();
+  
   //Map
-  map = new GraphicalTileMap(mapWidth, mapHeight);
+  map = new TileMap(mapWidth, mapHeight);
   //map.randomizeMap(1, tileColors.length-1);
   map.fillMapTiled(1, 2);
   map.fillMapEgdes(0, true);
@@ -119,7 +123,7 @@ public void draw() {
 
   //Draw
   background(64);
-  map.draw(mapOffsetX, mapOffsetY, tileWidth, tileHeight, tileColors);
+  mapRenderer.draw(map, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tileColors);
   objects.draw(mapOffsetX, mapOffsetY, tileWidth, tileHeight);
   drawHealthBar(tileWidth*0.2, tileHeight*0.2, tileWidth*0.8, tileHeight*0.8);
   //println(frameRate);
