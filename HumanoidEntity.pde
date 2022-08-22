@@ -1,11 +1,11 @@
-public abstract class gObj_Humanoid extends GameObject {
+public abstract class HumanoidEntity extends GameObject {
 
   public itm_Tool rightHandItem;
   public itm_Tool leftHandItem;
   public arm_Helmet helmet;
   public arm_Chestplate chestplate;
 
-  public gObj_Humanoid(int x, int y, int hp, int str, Race race, Team team) {
+  public HumanoidEntity(int x, int y, int hp, int str, Race race, Team team) {
     super(x, y, hp, str, race, team);
     this.rightHandItem = null;
     this.leftHandItem = null;

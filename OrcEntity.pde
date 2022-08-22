@@ -1,8 +1,8 @@
-public class gObj_Orc extends gObj_Humanoid {
+public class OrcEntity extends HumanoidEntity {
 
   private final int moveTurnOffset;
 
-  public gObj_Orc(int x, int y) {
+  public OrcEntity(int x, int y) {
     super(x, y, 1, 1, Race.ORC, Team.Enemy);
     moveTurnOffset = round(random(1));
     float ran = random(1);

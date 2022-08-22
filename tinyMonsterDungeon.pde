@@ -1,10 +1,3 @@
-  /***
-   If you are wondering why i am using class names like gObj_Player, which is not correct 
-   following java best practice syntax (All class-names should start with capital letter),
-   it is because i can't figure out how to make inner-classes in processing.
-   Else i would have went with GameObject.Player or something like that.
-   ***/
-  
   //Meta fields
   public boolean GAMEOVER;
   public boolean VICTORY;
@@ -26,7 +19,7 @@
   public float tileHeight; //Variable that describes the height of a tile;
   
   //Entity fields
-  public gObj_Player player;
+  public PlayerEntity player;
   public GameObjectHandler objects;
   
   //Method that pre-processes stuff, setting settings and such.
@@ -58,7 +51,7 @@
   
     //Entities
     objects = new GameObjectHandler();
-    player = new gObj_Player(1, 1);
+    player = new PlayerEntity(1, 1);
     objects.add(player);
     for (int i = 0; i < 15; i++) {
       IVector position = new IVector();
@@ -66,7 +59,7 @@
         position.x = round(random(0, mapWidth-1));
         position.y = round(random(0, mapHeight-1));
       } while (tileIsOccupied(position));
-      objects.add(new gObj_Orc(position.x, position.y));
+      objects.add(new OrcEntity(position.x, position.y));
     }
   }
   
