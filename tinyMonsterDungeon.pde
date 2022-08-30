@@ -14,8 +14,8 @@ TileMapRenderer mapRenderer;
 public int turnCount;
 
 //Render fields
-float render_width;
-float render_height;
+float renderWidth;
+float renderHeight;
 float mapOffsetX;
 float mapOffsetY;
 float mapDisplayWidth;
@@ -24,25 +24,24 @@ float tileWidth; //Variable that describes the width of a tile;
 float tileHeight; //Variable that describes the height of a tile;
 
 //Entity fields
-public PlayerEntity player;
-public GameObjectHandler objects;
+PlayerEntity player;
+GameObjectHandler objects;
 
 //Method that pre-processes stuff, setting settings and such.
-public void setup() {
+void setup() {
   //Settings
   size(800, 800);
-
+  
+  //Render settings
   smooth(12);
   ellipseMode(CORNER);
-  //strokeWeight(min(tileWidth, tileHeight)*0.014);
-  //stroke(0);
   noStroke();
-  //Initialize.
-  init();
+  
+  initGame();
 }
 
 //Method that initializes the map, objects and ect.
-public void init() {
+void initGame() {
   //Variables
   calculateDisplayVariables();
   turnCount = 0;
@@ -51,28 +50,44 @@ public void init() {
   
   mapRenderer = new TileMapRenderer();
   
-  //Map
-  map = new TileMap(mapWidth, mapHeight);
-  //map.randomizeMap(1, tileColors.length-1);
-  map.fillMapTiled(1, 2);
-  map.fillMapEgdes(0, true);
-
-  //Entities
   objects = new GameObjectHandler();
-  player = new PlayerEntity(1, 1);
-  objects.add(player);
-  for (int i = 0; i < 15; i++) {
-    IVector position = new IVector();
-    do {
-      position.x = round(random(0, mapWidth-1));
-      position.y = round(random(0, mapHeight-1));
-    } while (tileIsOccupied(position));
-    objects.add(new OrcEntity(position.x, position.y));
-  }
+  
+  initNewMap();
+  initNewLevel(true, objects, true);
+  
 }
 
+void initNewMap(){
+    //Map
+    map = new TileMap(mapWidth, mapHeight);
+    //map.randomizeMap(1, tileColors.length-1);
+    map.fillMapTiled(1, 2);
+    map.fillMapEgdes(0, true);
+}
+
+void initNewLevel(boolean initNewPlayer, GameObjectHandler objects ,boolean killMobs){
+    if(killMobs){
+      objects.clear();
+    }
+    
+    if(initNewPlayer){
+      player = new PlayerEntity(1, 1);
+    }
+    player.position = new IVector(1, 1);
+    objects.add(player);
+    
+    for (int i = 0; i < 15; i++) {
+      IVector position = new IVector();
+      do {
+        position.x = round(random(0, mapWidth-1));
+        position.y = round(random(0, mapHeight-1));
+      } while (tileIsOccupied(position));
+      objects.add(new OrcEntity(position.x, position.y));
+    }
+  }
+
 //Method that calculates where to display the map in the screen.
-public void calculateDisplayVariables() {
+void calculateDisplayVariables() {
   float render_width = width;
   float render_height = height;
 
@@ -91,20 +106,24 @@ public void calculateDisplayVariables() {
   tileWidth = tileSize;
   tileHeight = tileSize;
 }
+
 //returns if the tile value is in range of the map-dimensions.
-public boolean tileIsValid(IVector tilePosition) {
+boolean tileIsValid(IVector tilePosition) {
   return tilePosition.x >= 0 && tilePosition.x < mapWidth && tilePosition.y >= 0 && tilePosition.y < mapHeight;
 }
+
 //Method that return if a tile is occupied by either an object or a solid tile.
-public boolean tileIsOccupied(IVector tilePosition) {
+boolean tileIsOccupied(IVector tilePosition) {
   return tileIsOccupiedBySolid(tilePosition) || tileIsOccupiedByObject(tilePosition);
 }
+
 //Method that return if a tile is occupied by a solid tile.
-public boolean tileIsOccupiedBySolid(IVector tilePosition) {
+boolean tileIsOccupiedBySolid(IVector tilePosition) {
   return tileIsValid(tilePosition) && map.getTile(tilePosition.x, tilePosition.y).isSolid == true;
 }
+
 //Method that return if a tile is occupied by an object.
-public boolean tileIsOccupiedByObject(IVector tilePosition) {
+boolean tileIsOccupiedByObject(IVector tilePosition) {
   if (tileIsValid(tilePosition))
   {
     for (GameObject obj : objects) {
@@ -117,17 +136,26 @@ public boolean tileIsOccupiedByObject(IVector tilePosition) {
 }
 
 //Method that draws and updates the map, objects, ect.
-public void draw() {
+void draw() {
   //Update
   objects.update();
 
   //Draw
   background(64);
   mapRenderer.draw(map, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tileColors);
+  drawExitDoor();
   objects.draw(mapOffsetX, mapOffsetY, tileWidth, tileHeight);
   drawHealthBar(tileWidth*0.2, tileHeight*0.2, tileWidth*0.8, tileHeight*0.8);
-  //println(frameRate);
+  
+  
+  println(frameRate);
 }
+
+  void drawExitDoor(){
+    fill(#984310);
+    noStroke();
+    rect((mapWidth-2)*tileWidth+mapOffsetX, (mapHeight-2)*tileHeight+mapOffsetY, tileWidth, tileHeight);
+  }
 
 public void drawHealthBar(float x, float y, float w, float h) {
   float w2 = w*0.9;
@@ -185,6 +213,9 @@ public void onTurn() {
       }
     }
   }
+  if(player.getPosition().isEqualTo(new IVector(mapWidth-2,mapHeight-2))){
+    initNewLevel(false, objects, true);
+  }
 }
 //---Controls methods---//
 void mousePressed() {
@@ -198,7 +229,7 @@ void mouseWheel(MouseEvent me) {
 void keyPressed() {
   switch(key) {
   case 'n':
-    init();
+    initGame();
     break;
   }
   if (!GAMEOVER && !VICTORY) {

@@ -7,13 +7,13 @@ public class OrcEntity extends HumanoidEntity {
     moveTurnOffset = round(random(1));
     float ran = random(1);
     if (ran <= 0.25) {
-      this.helmet = new arm_Helmet(Material.WOOD);
+      this.helmet = new Helmet(Material.WOOD);
     } else if (ran <= 0.40) {
-      this.helmet = new arm_Helmet(Material.IRON);
+      this.helmet = new Helmet(Material.IRON);
     } else if (ran <= 0.50) {
-      this.helmet = new arm_Helmet(Material.COBALT);
+      this.helmet = new Helmet(Material.COBALT);
     }
-    rightHandItem = new wep_Sword(Material.WOOD, Material.WOOD);
+    rightHandItem = new Sword(Material.WOOD, Material.WOOD);
     if (leftHandItem != null) {
       leftHandItem.face_right = false;
     }

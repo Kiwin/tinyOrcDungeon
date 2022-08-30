@@ -132,6 +132,10 @@ public abstract class GameObject {
     return this.health;
   }
 
+  public IVector getPosition(){
+    return this.position.copy();
+  }
+
   //---Abstract methods---//
   public abstract int getStrength();
   public abstract int getArmor();

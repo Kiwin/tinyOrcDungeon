@@ -1,9 +1,9 @@
 public abstract class HumanoidEntity extends GameObject {
 
-  public itm_Tool rightHandItem;
-  public itm_Tool leftHandItem;
-  public arm_Helmet helmet;
-  public arm_Chestplate chestplate;
+  public BaseTool rightHandItem;
+  public BaseTool leftHandItem;
+  public Helmet helmet;
+  public Chestplate chestplate;
 
   public HumanoidEntity(int x, int y, int hp, int str, Race race, Team team) {
     super(x, y, hp, str, race, team);

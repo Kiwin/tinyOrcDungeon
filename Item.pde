@@ -1,9 +1,24 @@
-public abstract class Item {
+interface Weapon {
+ 
+  int getStrength();
+  
+}
+
+interface Item {
+
+  String getName();
+  void use(GameObject user);
+}
+
+
+
+
+public abstract class BaseItem implements Item {
 
   public final String name;
   public boolean face_right;
 
-  public Item(String name) {
+  public BaseItem(String name) {
     this.name = name;
     face_right = true;
   }
@@ -14,17 +29,24 @@ public abstract class Item {
   protected abstract void onUse(GameObject caster);
 }
 
-public abstract class itm_Shield extends itm_Tool {
-  public itm_Shield(String name, Material material_primary, Material material_secondary) {
+public abstract class BaseShield extends BaseTool {
+  public BaseShield(String name, Material material_primary, Material material_secondary) {
     super(name, material_primary, material_secondary);
   }
 }
-public abstract class itm_Tool extends Item {
+
+interface Tool {
+  
+  boolean isBroken();
+  
+}
+
+public abstract class BaseTool extends BaseItem implements Tool {
 
   public final Material material_primary;
   public final Material material_secondary;
   protected int durability;
-  public itm_Tool(String name, Material material_primary, Material material_secondary) {
+  public BaseTool(String name, Material material_primary, Material material_secondary) {
     super(name);
     this.material_primary = material_primary;
     this.material_secondary = material_secondary;
@@ -34,10 +56,18 @@ public abstract class itm_Tool extends Item {
     return this.durability <= 0;
   }
 }
-public abstract class itm_Armor extends Item {
+
+interface Armor {
+
+  public int getArmor();
+  public boolean isBroken();
+  public int blockDamage(int damage);
+}
+
+public abstract class BaseArmor extends BaseItem implements Armor {
   private int durability;
   public final Material material_primary;
-  public itm_Armor(String name, Material material_primary) {
+  public BaseArmor(String name, Material material_primary) {
     super(name);
     this.material_primary = material_primary;
     this.durability = material_primary.effeciency;
@@ -62,7 +92,8 @@ public abstract class itm_Armor extends Item {
     return damage;
   }
 }
-public abstract class itm_Weapon extends itm_Tool {
+
+public abstract class itm_Weapon extends BaseTool implements Weapon {
 
   protected final Material material_secondary;
 
@@ -75,8 +106,8 @@ public abstract class itm_Weapon extends itm_Tool {
   }
 }
 
-public class arm_Helmet extends itm_Armor {
-  public arm_Helmet(Material material_primary) {
+public class Helmet extends BaseArmor {
+  public Helmet(Material material_primary) {
     super("Helmet", material_primary);
   }
   public void draw(float x, float y, float w, float h) {
@@ -90,21 +121,28 @@ public class arm_Helmet extends itm_Armor {
   }
   public void onUse(GameObject caster) {
   }
+  
+  public String getName(){
+    return "Helmet";
+  }
 }
-public class arm_Chestplate extends itm_Armor {
+public class Chestplate extends BaseArmor {
 
-  public arm_Chestplate(Material material_primary) {
+  public Chestplate(Material material_primary) {
     super("Chestplate", material_primary);
   }
   public void draw(float x, float y, float w, float h) {
   }
   public void onUse(GameObject caster) {
   }
+  public String getName(){
+    return "Chestplate";
+  }
 }
 
-public class wep_Sword extends itm_Weapon {
+public class Sword extends itm_Weapon {
 
-  public wep_Sword(Material material_primary, Material material_secondary) {
+  public Sword(Material material_primary, Material material_secondary) {
     super("Sword", material_primary, material_secondary);
   }
   public void draw(float x, float y, float tileWidth, float tileHeight) {
@@ -130,10 +168,15 @@ public class wep_Sword extends itm_Weapon {
   }
   public void onUse(GameObject caster) {
   }
+  
+  public String getName(){
+    return "Sword";
+  }
+  
 }
-public class wep_Axe extends itm_Weapon {
+public class Axe extends itm_Weapon {
 
-  public wep_Axe(Material material_primary, Material material_secondary) {
+  public Axe(Material material_primary, Material material_secondary) {
     super("Axe", material_primary, material_secondary);
   }
   public void draw(float x, float y, float tileWidth, float tileHeight) {
@@ -163,10 +206,14 @@ public class wep_Axe extends itm_Weapon {
   }
   public void onUse(GameObject caster) {
   }
+  
+  public String getName(){
+    return "Axe";
+  }
 }
 
-public class shd_Shield extends itm_Shield {
-  public shd_Shield(Material material_primary, Material material_secondary) {
+public class Shield extends BaseShield {
+  public Shield(Material material_primary, Material material_secondary) {
     super("Shield", material_primary, material_secondary);
   }
   public void draw(float x, float y, float tileWidth, float tileHeight) {
@@ -185,4 +232,9 @@ public class shd_Shield extends itm_Shield {
   }
   public void onUse(GameObject caster) {
   }
+  
+  public String getName(){
+    return "Shield";
+  }
+  
 }
