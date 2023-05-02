@@ -31,11 +31,11 @@ class IVector {
     this.x /= other.x;
     this.y /= other.y;
   }
-  public void multScalar(float scalar) {
+  public void multScalar(int scalar) {
     this.x *= scalar;
     this.y *= scalar;
   }
-  public void divScalar(float scalar) {
+  public void divScalar(int scalar) {
     this.x /= scalar;
     this.y /= scalar;
   }
