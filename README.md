@@ -11,3 +11,9 @@ The player wins by killing all the monsters in the room. If the monsters kill th
 You can move horizontally or vertically, but NOT diagonal with `W` `A` `S` `D`. Attempting to press two directions at once will consume 2 turns.
 
 To reset, or start a new game press `N`.
+
+
+# Development
+
+Add processing installation folder to `%path%` environment variable.
+Run the script `run.cmd` to build and run.
