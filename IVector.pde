@@ -24,12 +24,20 @@ class IVector {
     this.y -= other.y;
   }
   public void mult(IVector other) {
+    this.x *= other.x;
+    this.y *= other.y;
+  }
+  public void div(IVector other) {
     this.x /= other.x;
     this.y /= other.y;
   }
-  public void div(IVector other) {
-    this.x *= other.x;
-    this.y *= other.y;
+  public void multScalar(float scalar) {
+    this.x *= scalar;
+    this.y *= scalar;
+  }
+  public void divScalar(float scalar) {
+    this.x /= scalar;
+    this.y /= scalar;
   }
   public PVector toPVector() {
     return new PVector(this.x, this.y);
