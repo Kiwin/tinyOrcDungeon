@@ -1,7 +1,7 @@
 public class OrcEntity extends HumanoidEntity {
-
+  
   private final int moveTurnOffset;
-
+  
   public OrcEntity(int x, int y) {
     super(x, y, 1, 1, Race.ORC, Team.Enemy);
     moveTurnOffset = round(random(1));
@@ -19,15 +19,16 @@ public class OrcEntity extends HumanoidEntity {
     }
   }
   @Override
-    public void onTurn(int turnCount) {
+  public void onTurn(int turnCount) {
     super.onTurn(turnCount);
-    if ((turnCount+moveTurnOffset)%2==0) { //Checks if should move this round.
+    if ((turnCount + moveTurnOffset) % 2 ==  0) { //Checks if should move this round.
       int checks = 0;
-      Direction direction;
-      do {
-        direction = Direction.values()[round(random(Direction.values().length-1))];
+      IVector direction;
+      IVector[] directions = new IVector[] {new IVector(1,0), new IVector( -1,0), new IVector(0,1), new IVector(0, -1)}; 
+      do{
+        direction = directions[round(random(directions.length - 1))];
         checks++;
-      } while (!this.moveOrAttack(direction) && checks < 20);
+      } while(!this.moveOrAttackRelative(direction, tileMap) && checks < 20);
     }
   }
   public void onDeath() {
