@@ -1,0 +1,5 @@
+interface Tool {
+  
+  boolean isBroken();
+  
+}
