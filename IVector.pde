@@ -15,29 +15,35 @@ class IVector {
   public IVector copy() {
     return new IVector(this.x, this.y);
   }
-  public void add(IVector other) {
+  public IVector add(IVector other) {
     this.x += other.x;
     this.y += other.y;
+    return this;
   }
-  public void sub(IVector other) {
+  public IVector sub(IVector other) {
     this.x -= other.x;
     this.y -= other.y;
+    return this;
   }
-  public void mult(IVector other) {
+  public IVector mult(IVector other) {
     this.x *= other.x;
     this.y *= other.y;
+    return this;
   }
-  public void div(IVector other) {
+  public IVector div(IVector other) {
     this.x /= other.x;
     this.y /= other.y;
+    return this;
   }
-  public void multScalar(int scalar) {
+  public IVector multScalar(int scalar) {
     this.x *= scalar;
     this.y *= scalar;
+    return this;
   }
-  public void divScalar(int scalar) {
+  public IVector divScalar(int scalar) {
     this.x /= scalar;
     this.y /= scalar;
+    return this;
   }
   public PVector toPVector() {
     return new PVector(this.x, this.y);
