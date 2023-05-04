@@ -31,12 +31,12 @@ GameObjectHandler objects;
 void setup() {
   //Settings
   size(800, 800);
-  
+
   //Render settings
   smooth(12);
   ellipseMode(CORNER);
   noStroke();
-  
+
   initGame();
 }
 
@@ -47,14 +47,13 @@ void initGame() {
   turnCount = 0;
   GAMEOVER = false;
   VICTORY = false;
-  
+
   mapRenderer = new TileMapRenderer();
-  
+
   objects = new GameObjectHandler();
-  
+
   initNewMap();
-  initNewLevel(true, objects, true);
-  
+  initNewLevel(true, objects, true, tileMap);
 }
 
 void initNewMap() {
@@ -65,43 +64,60 @@ void initNewMap() {
   tileMap.fillMapEgdes(0, true);
 }
 
-void initNewLevel(boolean initNewPlayer, GameObjectHandler objects ,boolean killMobs) {
+void initNewLevel(boolean initNewPlayer, GameObjectHandler objects, boolean killMobs, TileMap tileMap) {
   if (killMobs) {
     objects.clear();
   }
-  
+
   if (initNewPlayer) {
     player = new PlayerEntity(1, 1);
   }
   player.position = new IVector(1, 1);
   objects.add(player);
-  
-  for (int i = 0; i < 15; i++) {
+
+  float enemyPerTile = 0.2;
+  float enemyPerTileFactor = tileMap.getTileCount()*enemyPerTile;
+  float enemyCount = floor(enemyPerTileFactor/2+random(enemyPerTileFactor/4));
+  println("Spawning", enemyCount, "enemies");
+
+  for (int i = 0; i < enemyCount; i++) {
+
     IVector position = new IVector();
+    int triesRemaining = 10;
     do {
       position.x = round(random(0, mapWidth - 1));
       position.y = round(random(0, mapHeight - 1));
-    } while(tileIsOccupied(position, tileMap));
+      triesRemaining--;
+      println("attempting to spawn enemy at", position.x, position.y, triesRemaining);
+    } while (triesRemaining > 0 && tileIsOccupied(position, tileMap));
     objects.add(new OrcEntity(position.x, position.y));
+    if (triesRemaining > 0) {
+      println("Enemy spawned", position.x, position.y, triesRemaining);
+    } else {
+      println("Failed to spawn enemy");
+    }
+    println("Enemies left to spawn:", enemyCount-i-1);
   }
+
+  checkForWinCondition();
 }
 
 //Method that calculates where to display the map in the screen.
 void calculateDisplayVariables() {
   float render_width = width;
   float render_height = height;
-  
+
   float smallestDimension = min(render_width, render_height);
   /***
-  Here we are creating a margin effect for the displayed map
-  by scaling down the map display area accordingly to the 'marginPercent' variable,
-  and afterwards calculating the offsets accordingly to the map display dimensions.
-  ***/
+   Here we are creating a margin effect for the displayed map
+   by scaling down the map display area accordingly to the 'marginPercent' variable,
+   and afterwards calculating the offsets accordingly to the map display dimensions.
+   ***/
   mapDisplayWidth = smallestDimension * (1 - marginPercent);
   mapDisplayHeight = mapDisplayWidth;
   mapOffsetX = (render_width - mapDisplayWidth) / 2;
   mapOffsetY = (render_height - mapDisplayHeight) / 2;
-  
+
   float tileSize = min(mapDisplayWidth / mapWidth, mapDisplayHeight / mapHeight);
   tileWidth = tileSize;
   tileHeight = tileSize;
@@ -111,27 +127,26 @@ void calculateDisplayVariables() {
 void draw() {
   //Update
   objects.update();
-  
+
   //Draw
   background(64);
   mapRenderer.draw(tileMap, mapOffsetX, mapOffsetY, tileWidth, tileHeight, tileColors);
   drawExitDoor();
   objects.draw(mapOffsetX, mapOffsetY, tileWidth, tileHeight);
   drawHealthBar(tileWidth * 0.2, tileHeight * 0.2, tileWidth * 0.8, tileHeight * 0.8);
-  
 }
 
 void drawExitDoor() {
   fill(#984310);
   noStroke();
-  rect((mapWidth - 2) * tileWidth + mapOffsetX,(mapHeight - 2) * tileHeight + mapOffsetY, tileWidth, tileHeight);
+  rect((mapWidth - 2) * tileWidth + mapOffsetX, (mapHeight - 2) * tileHeight + mapOffsetY, tileWidth, tileHeight);
 }
 
 public void drawHealthBar(float x, float y, float w, float h) {
   float w2 = w * 0.9;
   pushMatrix();
   translate(x, y);
-  
+
   for (int i = 0; i < player.getHealth(); i++) {
     //Draw Hearts
     float x2 = w2 * i;
@@ -150,7 +165,7 @@ public void drawHealthBar(float x, float y, float w, float h) {
     vertex(x2, h * 0.50);
     endShape(CLOSE);
   }
-  
+
   //Draw Shields
   for (int i = player.getHealth(); i < player.getHealth() + player.getArmor(); i++) {
     float x2 = w2 * i;
@@ -175,18 +190,23 @@ public void onTurn() {
     objects.onTurn(turnCount);
     objects.onTurnEnd(turnCount);
     turnCount++;
-    if (!player.isAlive()) {
-      GAMEOVER = true;
-    } else {
-      if (objects.size() == 1) {
-        VICTORY = true;
-      }
-    }
+    checkForWinCondition();
+    checkForGameOverCondition();
   }
-  if (player.getPosition().isEqualTo(new IVector(mapWidth - 2,mapHeight - 2))) {
-    initNewLevel(false, objects, true);
+  if (player.getPosition().isEqualTo(new IVector(mapWidth - 2, mapHeight - 2))) {
+    initNewLevel(false, objects, true, tileMap);
   }
 }
+
+void checkForGameOverCondition() {
+  GAMEOVER = !player.isAlive();
+}
+
+void checkForWinCondition() {
+  VICTORY = objects.size() == 1;
+}
+
+
 //---Controls methods---//
 void mousePressed() {
 }
@@ -198,31 +218,35 @@ void mouseWheel(MouseEvent me) {
 }
 void keyPressed() {
   switch(key) {
-    case 'n':
-      initGame();
-      break;
+  case 'n':
+    initGame();
+    break;
   }
-  if (!GAMEOVER && !VICTORY) {
-    boolean actionPerformed = false;
-    switch(key) {
-      case 'w':
-        actionPerformed = player.moveOrAttackRelative(new IVector(0,-1), tileMap);
-        break;
-      case 's':
-        actionPerformed = player.moveOrAttackRelative(new IVector(0, 1), tileMap);
-        break;
-      case 'a':
-        actionPerformed = player.moveOrAttackRelative(new IVector( -1,0), tileMap);
-        break;
-      case 'd':
-        actionPerformed = player.moveOrAttackRelative(new IVector(1,0), tileMap);
-        break;
-    }
-    if (actionPerformed) {
-      onTurn();
-    }
+  if (GAMEOVER) return;
+  handlePlayerAction(key);
+}
+
+void handlePlayerAction(char key) {
+  boolean actionPerformed = false;
+  switch(key) {
+  case 'w':
+    actionPerformed = player.moveOrAttackRelative(new IVector(0, -1), tileMap);
+    break;
+  case 's':
+    actionPerformed = player.moveOrAttackRelative(new IVector(0, 1), tileMap);
+    break;
+  case 'a':
+    actionPerformed = player.moveOrAttackRelative(new IVector( -1, 0), tileMap);
+    break;
+  case 'd':
+    actionPerformed = player.moveOrAttackRelative(new IVector(1, 0), tileMap);
+    break;
+  }
+  if (actionPerformed) {
+    onTurn();
   }
 }
+
 void keyReleased() {
 }
 void keyTyped() {

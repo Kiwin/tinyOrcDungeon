@@ -47,6 +47,10 @@ public class TileMap {
   public Tile getTile(int x, int y) {
     return map[x][y];
   }
+  
+  public int getTileCount(){
+    return this.width * this.height;
+  }
 }
 
 public class TileMapRenderer {
