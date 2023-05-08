@@ -1,4 +1,5 @@
 public abstract class BaseArmor extends BaseItem implements Armor {
+
   private int durability;
   public final Material material_primary;
   public BaseArmor(String name, Material material_primary) {
@@ -12,7 +13,7 @@ public abstract class BaseArmor extends BaseItem implements Armor {
   public int getArmor() {
     return this.durability;
   }
-  
+
   public int blockDamage(int damage) {
     if (!this.isBroken()) {
       if (damage >= this.durability) {

@@ -11,15 +11,15 @@ public abstract class HumanoidEntity extends GameObject {
     this.leftHandItem = null;
   }
 
-  public void draw(float xOffset, float yOffset, float tileWidth, float tileHeight) {
+  public void render(float xOffset, float yOffset, float tileWidth, float tileHeight) {
     //Calculate
-    float x = xOffset+this.render_position.x*tileWidth;
-    float y = yOffset+this.render_position.y*tileHeight-tileHeight*0.15;
+    float x = xOffset+this.renderPosition.x*tileWidth;
+    float y = yOffset+this.renderPosition.y*tileHeight-tileHeight*0.15;
     float n = frameCount*0.05;
     float normalShake = sin(n)*tileWidth*0.020;
     float victoryShake = sin(n*2)*tileWidth*0.1;
     float victoryHeadShake = sin(n*2)*tileWidth*0.05;
-    boolean dance = GAMEOVER || VICTORY;
+    boolean dance = GAME.GAMEOVER || GAME.VICTORY;
     float headX = x+tileWidth*0.4;
     float headY = y+tileWidth*0.35+(dance?victoryHeadShake:normalShake);
     float headW = tileWidth*0.2;
@@ -42,9 +42,9 @@ public abstract class HumanoidEntity extends GameObject {
   }
 
   public void update() {
-    this.render_position.lerp(this.position.toPVector(), 0.1);
-    if (this.render_position.dist(this.position.toPVector()) < 0.01) {
-      this.render_position = this.position.toPVector();
+    this.renderPosition.lerp(this.position.toPVector(), 0.1);
+    if (this.renderPosition.dist(this.position.toPVector()) < 0.01) {
+      this.renderPosition = this.position.toPVector();
     }
   }
 

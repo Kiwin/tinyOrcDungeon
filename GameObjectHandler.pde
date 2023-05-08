@@ -30,7 +30,7 @@ public class GameObjectHandler extends ArrayList<GameObject> {
   //Method that draws all objects in the list.
   public void draw(float xOffset, float yOffset, float tileWidth, float tileHeight) {
     for (GameObject obj : this) {
-      obj.draw(xOffset, yOffset, tileWidth, tileHeight);
+      obj.render(xOffset, yOffset, tileWidth, tileHeight);
     }
   }
   //Method that calls all objects in the lists onTurn method.

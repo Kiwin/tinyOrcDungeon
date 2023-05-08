@@ -1,8 +1,8 @@
 public abstract class BaseItem implements Item {
-  
+
   public final String name;
   public boolean face_right;
-  
+
   public BaseItem(String name) {
     this.name = name;
     face_right = true;

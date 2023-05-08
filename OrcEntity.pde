@@ -18,6 +18,7 @@ public class OrcEntity extends HumanoidEntity {
       leftHandItem.face_right = false;
     }
   }
+  
   @Override
   public void onTurn(int turnCount) {
     super.onTurn(turnCount);
@@ -28,7 +29,7 @@ public class OrcEntity extends HumanoidEntity {
       do{
         direction = directions[round(random(directions.length - 1))];
         checks++;
-      } while(!this.moveOrAttackRelative(direction, tileMap) && checks < 20);
+      } while(!this.moveOrAttackRelative(direction, GAME.tileMap) && checks < 20);
     }
   }
   public void onDeath() {

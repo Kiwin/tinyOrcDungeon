@@ -18,7 +18,7 @@ boolean tileIsOccupiedBySolid(IVector tilePosition, TileMap tileMap) {
 boolean tileIsOccupiedByObject(IVector tilePosition, TileMap tileMap) {
   if (tileIsInBounds(tilePosition,tileMap))
   {
-    for (GameObject obj : objects) {
+    for (GameObject obj : GAME.objects) {
       if (obj.position.isEqualTo(tilePosition)) {
         return true;
       }

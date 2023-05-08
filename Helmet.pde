@@ -1,5 +1,5 @@
-
 public class Helmet extends BaseArmor {
+
   public Helmet(Material material_primary) {
     super("Helmet", material_primary);
   }
@@ -14,7 +14,7 @@ public class Helmet extends BaseArmor {
   }
   public void onUse(GameObject caster) {
   }
-  
+
   public String getName() {
     return "Helmet";
   }

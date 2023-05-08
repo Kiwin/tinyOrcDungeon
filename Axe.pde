@@ -1,5 +1,5 @@
 public class Axe extends itm_Weapon {
-  
+
   public Axe(Material material_primary, Material material_secondary) {
     super("Axe", material_primary, material_secondary);
   }
@@ -8,8 +8,8 @@ public class Axe extends itm_Weapon {
     float axeHandleHeight = tileHeight * 0.3;
     float axeHeadWidth = tileWidth * 0.1;
     float axeHeadHeight = tileHeight * 0.15;
-    
-    
+
+
     pushMatrix();
     translate(x, y);
     if (!face_right) {
@@ -25,12 +25,12 @@ public class Axe extends itm_Weapon {
     vertex(axeHeadWidth, axeHeadHeight - axeHandleHeight / 3);
     vertex(axeHeadWidth, -axeHandleHeight / 3);
     endShape(CLOSE);
-    
+
     popMatrix();
   }
   public void onUse(GameObject caster) {
   }
-  
+
   public String getName() {
     return "Axe";
   }
