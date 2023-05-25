@@ -1,9 +1,9 @@
-public class Axe extends itm_Weapon {
+public class Axe extends BaseWeapon {
 
   public Axe(Material material_primary, Material material_secondary) {
     super("Axe", material_primary, material_secondary);
   }
-  public void draw(float x, float y, float tileWidth, float tileHeight) {
+  public void render(float x, float y, float tileWidth, float tileHeight) {
     float axeHandleWidth = tileWidth * 0.05;
     float axeHandleHeight = tileHeight * 0.3;
     float axeHeadWidth = tileWidth * 0.1;
@@ -12,14 +12,14 @@ public class Axe extends itm_Weapon {
 
     pushMatrix();
     translate(x, y);
-    if (!face_right) {
+    if (!isFacingRight) {
       scale( -1, 1);
     }
     //Draw Handle
-    fill(material_primary.colour);
+    fill(primaryMaterial.colour);
     rect( -axeHandleWidth / 2, -axeHandleHeight / 3, axeHandleWidth, axeHandleHeight);
     //Draw Head
-    fill(material_secondary.colour);
+    fill(secondaryMaterial.colour);
     beginShape();
     vertex(0, -axeHandleHeight / 3);
     vertex(axeHeadWidth, axeHeadHeight - axeHandleHeight / 3);
@@ -28,7 +28,7 @@ public class Axe extends itm_Weapon {
 
     popMatrix();
   }
-  public void onUse(GameObject caster) {
+  public void onUse(GameObject user, GameObject target) {
   }
 
   public String getName() {

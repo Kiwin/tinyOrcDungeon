@@ -1,13 +1,13 @@
 public abstract class BaseTool extends BaseItem implements Tool {
   
-  public final Material material_primary;
-  public final Material material_secondary;
+  public final Material primaryMaterial;
+  public final Material secondaryMaterial;
   protected int durability;
-  public BaseTool(String name, Material material_primary, Material material_secondary) {
+  public BaseTool(String name, Material primaryMaterial, Material secondaryMaterial) {
     super(name);
-    this.material_primary = material_primary;
-    this.material_secondary = material_secondary;
-    this.durability = material_primary.effeciency;
+    this.primaryMaterial = primaryMaterial;
+    this.secondaryMaterial = secondaryMaterial;
+    this.durability = primaryMaterial.effeciency;
   }
   public boolean isBroken() {
     return this.durability <= 0;

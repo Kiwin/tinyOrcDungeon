@@ -1,12 +1,31 @@
-public class GameObjectHandler extends ArrayList<GameObject> {
+public class GameObjectHandler {
+
+
+  final ArrayList<GameObject> objects = new ArrayList<GameObject>();
 
   //Class Constructor.
   public GameObjectHandler() {
   }
 
+  public int getObjectCount() {
+    return objects.size();
+  }
+
+  public ArrayList<GameObject> getObjects() {
+    return objects;
+  }
+
+  public void addObject(GameObject obj) {
+    objects.add(obj);
+  }
+
+  public void destroyAllObjects() {
+    objects.clear();
+  }
+
   //Method that updates all objects in the list.
   public void update() {
-    for (GameObject obj : this) {
+    for (GameObject obj : objects) {
       obj.update();
     }
   }
@@ -15,49 +34,49 @@ public class GameObjectHandler extends ArrayList<GameObject> {
   //It also calls the objects onDeath() method before deleting it.
   public void garbageCollect() {
     /***
-     The for-loop loops through the object list backwards to avoid 
+     The for-loop loops through the object list backwards to avoid
      error from the elements inside the list shuffling around when trying to access them..
      ***/
-    for (int i = this.size()-1; i >= 0; i--) { 
-      GameObject obj = this.get(i);
+    for (int i = objects.size()-1; i >= 0; i--) {
+      GameObject obj = objects.get(i);
       if (!obj.isAlive() && obj.deleteable) {
         obj.onDeath();
-        this.remove(obj);
+        objects.remove(obj);
       }
     }
   }
 
   //Method that draws all objects in the list.
-  public void draw(float xOffset, float yOffset, float tileWidth, float tileHeight) {
-    for (GameObject obj : this) {
+  public void render(float xOffset, float yOffset, float tileWidth, float tileHeight) {
+    for (GameObject obj : objects) {
       obj.render(xOffset, yOffset, tileWidth, tileHeight);
     }
   }
   //Method that calls all objects in the lists onTurn method.
   public void onTurnBegin(int turnCount) {
-    for (GameObject obj : this) {
+    for (GameObject obj : objects) {
       obj.onTurnBegin(turnCount);
     }
     garbageCollect();
   }
   public void onTurn(int turnCount) {
-    for (GameObject obj : this) {
+    for (GameObject obj : objects) {
       obj.onTurn(turnCount);
     }
     garbageCollect();
   }
   public void onTurnEnd(int turnCount) {
-    for (GameObject obj : this) {
+    for (GameObject obj : objects) {
       obj.onTurnEnd(turnCount);
     }
     garbageCollect();
   }
 
-  //Method that *!TRIES!* to return the object at given position
-  //If it fails it will return 'null'
+  //Tries to return the GameObject at given position
+  //If no GameObject is found it will return null
   public GameObject getObjectAt(IVector position) {
-    for (GameObject obj : this) {
-      if (obj.position.isEqualTo(position)) {
+    for (GameObject obj : objects) {
+      if (obj.position.equals(position)) {
         return obj;
       }
     }

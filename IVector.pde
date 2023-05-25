@@ -48,7 +48,7 @@ class IVector {
   public PVector toPVector() {
     return new PVector(this.x, this.y);
   }
-  public boolean isEqualTo(IVector other) {
+  public boolean equals(IVector other) {
     return this.x == other.x && this.y == other.y;
   }
 }

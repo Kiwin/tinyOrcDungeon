@@ -1,5 +1,5 @@
 interface Item {
 
   String getName();
-  void use(GameObject user);
+  void use(GameObject user, GameObject target);
 }

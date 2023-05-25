@@ -3,7 +3,7 @@ class GameSettings {
   //Mapping fields
   public final int mapWidth = 9;
   public final int mapHeight = 9;
-  public final color[] tileColors = new color[] {0, 64, 96}; //{0, #ff6666, #66ff66, #6666ff, #ffff66, #66ffff};
+  public final color[] tileColors = new color[] {0, 64, 96};
   public final float viewportBorderMarginPercent = 10;
 }
 

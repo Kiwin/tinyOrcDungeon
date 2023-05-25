@@ -1,20 +1,31 @@
 //Simple class representing a tile.
-public class Tile {
+public class BaseTile {
 
   public int type;
-  public boolean isSolid;
+  public boolean solid;
 
-  public Tile(int type) {
+  public BaseTile(int type) {
     this.type = type;
-    isSolid = false;
+    solid = false;
   }
 
-  public Tile(int type, boolean isSolid) {
+  public BaseTile(int type, boolean solid) {
     this.type = type;
-    this.isSolid = isSolid;
+    this.solid = solid;
   }
 
   public void onTurn() {
-    //The main object does nothing.
   }
+  
+  public boolean isSolid(){
+    return this.solid;
+  }
+}
+
+public interface Tile {
+  TileType getType();
+}
+
+public enum TileType {
+  REGULAR
 }

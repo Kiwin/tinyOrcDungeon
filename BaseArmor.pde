@@ -1,11 +1,11 @@
 public abstract class BaseArmor extends BaseItem implements Armor {
 
   private int durability;
-  public final Material material_primary;
-  public BaseArmor(String name, Material material_primary) {
+  public final Material material;
+  public BaseArmor(String name, Material material) {
     super(name);
-    this.material_primary = material_primary;
-    this.durability = material_primary.effeciency;
+    this.material = material;
+    this.durability = material.effeciency;
   }
   public boolean isBroken() {
     return this.durability <= 0;

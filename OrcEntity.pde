@@ -15,7 +15,7 @@ public class OrcEntity extends HumanoidEntity {
     }
     rightHandItem = new Sword(Material.WOOD, Material.WOOD);
     if (leftHandItem != null) {
-      leftHandItem.face_right = false;
+      leftHandItem.isFacingRight = false;
     }
   }
   

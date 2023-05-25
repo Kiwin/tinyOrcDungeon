@@ -1,15 +1,15 @@
 public abstract class BaseItem implements Item {
 
   public final String name;
-  public boolean face_right;
+  public boolean isFacingRight;
 
   public BaseItem(String name) {
     this.name = name;
-    face_right = true;
+    isFacingRight = true;
   }
-  public abstract void draw(float x, float y, float w, float h);
-  public void use(GameObject caster) {
-    this.onUse(caster);
+  public abstract void render(float x, float y, float w, float h);
+  public void use(GameObject user, GameObject target) {
+    this.onUse(user, target);
   }
-  protected abstract void onUse(GameObject caster);
+  protected abstract void onUse(GameObject user, GameObject target);
 }

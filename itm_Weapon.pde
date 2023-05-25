@@ -1,12 +1,12 @@
-public abstract class itm_Weapon extends BaseTool implements Weapon {
+public abstract class BaseWeapon extends BaseTool implements Weapon {
   
-  protected final Material material_secondary;
+  protected final Material secondaryMaterial;
   
-  public itm_Weapon(String name, Material material_primary, Material material_secondary) {
-    super(name, material_primary, material_secondary);
-    this.material_secondary = material_secondary;
+  public BaseWeapon(String name, Material primaryMaterial, Material secondaryMaterial) {
+    super(name, primaryMaterial, secondaryMaterial);
+    this.secondaryMaterial = secondaryMaterial;
   }
   public int getStrength() {
-    return this.material_secondary.effeciency;
+    return this.secondaryMaterial.effeciency;
   }
 }

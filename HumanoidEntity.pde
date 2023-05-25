@@ -7,8 +7,6 @@ public abstract class HumanoidEntity extends GameObject {
 
   public HumanoidEntity(int x, int y, int hp, int str, Race race, Team team) {
     super(x, y, hp, str, race, team);
-    this.rightHandItem = null;
-    this.leftHandItem = null;
   }
 
   public void render(float xOffset, float yOffset, float tileWidth, float tileHeight) {
@@ -31,13 +29,13 @@ public abstract class HumanoidEntity extends GameObject {
     fill(this.race.skinColor);
     rect(headX, headY, headW, headH);
     if (this.rightHandItem != null) {
-      this.rightHandItem.draw(x+tileWidth*0.8, y+tileWidth*0.6-(dance?victoryShake:normalShake), tileWidth, tileHeight);
+      this.rightHandItem.render(x+tileWidth*0.8, y+tileWidth*0.6-(dance?victoryShake:normalShake), tileWidth, tileHeight);
     }
     if (this.leftHandItem != null) {
-      this.leftHandItem.draw(x+tileWidth*0.2, y+tileWidth*0.6-(dance?victoryShake:normalShake), tileWidth, tileHeight);
+      this.leftHandItem.render(x+tileWidth*0.2, y+tileWidth*0.6-(dance?victoryShake:normalShake), tileWidth, tileHeight);
     }
     if (this.helmet != null) {
-      this.helmet.draw(headX, headY, headW, headH);
+      this.helmet.render(headX, headY, headW, headH);
     }
   }
 
@@ -50,11 +48,11 @@ public abstract class HumanoidEntity extends GameObject {
 
   public int getStrength() {
     int str = this.strength;
-    if (this.rightHandItem != null && this.rightHandItem instanceof itm_Weapon) {
-      str += ((itm_Weapon) this.rightHandItem).getStrength();
+    if (this.rightHandItem != null && this.rightHandItem instanceof BaseWeapon) {
+      str += ((BaseWeapon) this.rightHandItem).getStrength();
     }
-    if (this.leftHandItem != null && this.leftHandItem instanceof itm_Weapon) {
-      str += ((itm_Weapon) this.leftHandItem).getStrength();
+    if (this.leftHandItem != null && this.leftHandItem instanceof BaseWeapon) {
+      str += ((BaseWeapon) this.leftHandItem).getStrength();
     }
     return str;
   }
