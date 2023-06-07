@@ -4,13 +4,13 @@ public abstract class GameObject {
   public boolean deleteable;
 
   //Position fields
-  protected IVector position;
-  protected PVector renderPosition;
+  private IVector position;
+  private PVector renderPosition;
 
   //Combat fields
-  protected int health; //Variable describes the GameObjects current health.
-  protected int healthMax; //Variable describes how much health the GameObject maximum can have.
-  protected int strength; //Variable describes how much damage the GameObject can deal.
+  private int health; //Variable describes the GameObjects current health.
+  private int healthMax; //Variable describes how much health the GameObject maximum can have.
+  private int strength; //Variable describes how much damage the GameObject can deal.
   private boolean healable; //Variable used to dictate of the GameObject can heal.
   private boolean teamCertain;
   private boolean raceCertain;
@@ -18,7 +18,6 @@ public abstract class GameObject {
   //Team & Identification fields
   public final Race race;
   public Team team;
-
 
   public GameObject(int x, int y, int hp, int str, Race race, Team team) {
     this.position = new IVector(x, y);
@@ -33,18 +32,18 @@ public abstract class GameObject {
     this.raceCertain = true;
     this.deleteable = true;
   }
-  
+
   public boolean isAlive() {
     return health > 0;
   }
-  
+
   public void heal(int healingPoints) {
     if (this.healable) {
       this.health += healingPoints;
       this.health = constrain(this.health, 0, this.healthMax);
     }
   }
-  
+
   public void takeDamage(int damagePoints) {
     this.health -= damagePoints;
   }
@@ -63,8 +62,8 @@ public abstract class GameObject {
   // Moves the GameObject to a position or attacking if moving is not possible.
   // Returns if the player successfully performed the action.
   public boolean moveOrAttack(IVector newPosition, TileMap tileMap) {
-    if (tileIsOccupied(newPosition, tileMap, GAME.objects) && !tileMap.getTile(newPosition).isSolid()) {
-      GameObject target = GAME.objects.getObjectAt(newPosition);
+    if (tileIsOccupied(newPosition, tileMap, GAME.objectHandler) && !tileMap.getTile(newPosition).isSolid()) {
+      GameObject target = GAME.objectHandler.getObjectAt(newPosition);
       if (target != null) {
         this.attack(target);
         return true;
@@ -93,7 +92,7 @@ public abstract class GameObject {
 
   //method that returns if the GameObject can move to the given position
   public boolean canMoveTo(IVector position, TileMap tileMap) {
-    return !tileIsOccupied(position, tileMap, GAME.objects);
+    return !tileIsOccupied(position, tileMap, GAME.objectHandler);
   }
 
   public void kill() {
@@ -109,8 +108,41 @@ public abstract class GameObject {
     return this.health;
   }
 
+  public void setHealth(int health) {
+    this.health = health;
+  }
+
   public IVector getPosition() {
     return this.position.copy();
+  }
+
+  public void setPosition(IVector position) {
+    this.position = position;
+  }
+
+  public PVector getRenderPosition() {
+    return this.renderPosition;
+  }
+
+  public void setRenderPosition(PVector position) {
+    this.renderPosition = position;
+  }
+
+  public boolean isTeamCertain() {
+    return this.teamCertain;
+  }
+
+  
+  public void setTeamCertain(boolean isTeamCertain){
+    this.teamCertain = isTeamCertain;
+  }
+  
+  public boolean isRaceCertain() {
+    return this.raceCertain;
+  }
+
+  public void setRaceCertain(boolean isRaceCertain){
+    this.raceCertain = isRaceCertain;
   }
 
   //---Abstract methods---//

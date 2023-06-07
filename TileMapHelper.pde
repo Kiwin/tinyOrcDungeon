@@ -6,5 +6,5 @@ static boolean tileIsInBounds(IVector tilePosition, TileMap tileMap) {
 
 //Method that return if a tile is occupied by either an object or a solid tile.
 static boolean tileIsOccupied(IVector tilePosition, TileMap tileMap, GameObjectHandler objects) {
-  return tileMap.getTile(tilePosition).isSolid() || objects.getObjectAt(tilePosition) != null;
+  return tileMap.isPositionInBounds(tilePosition) && tileMap.getTile(tilePosition).isSolid() || objects.getObjectAt(tilePosition) != null;
 }

@@ -11,5 +11,5 @@ public abstract class BaseItem implements Item {
   public void use(GameObject user, GameObject target) {
     this.onUse(user, target);
   }
-  protected abstract void onUse(GameObject user, GameObject target);
+  public abstract void onUse(GameObject user, GameObject target);
 }

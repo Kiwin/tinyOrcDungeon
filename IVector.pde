@@ -1,3 +1,5 @@
+import java.util.Comparator;
+import java.util.Collections;
 
 class IVector {
 
@@ -48,7 +50,41 @@ class IVector {
   public PVector toPVector() {
     return new PVector(this.x, this.y);
   }
+  public float distanceTo(IVector other) {
+    return dist(this.x, this.y, other.x, other.y);
+  }
   public boolean equals(IVector other) {
     return this.x == other.x && this.y == other.y;
+  }
+}
+
+static class CompareIVectorByDistance implements Comparator<IVector[]> {
+  public int compare(IVector[] a, IVector[] b) {
+    float aDist = a[0].distanceTo(a[1]);
+    float bDist = b[0].distanceTo(b[1]);
+    return Float.compare(aDist, bDist);
+  }
+}
+
+static class IVectorHelper {
+
+  public static ArrayList<IVector> sortByDistance(ArrayList<IVector> vectors, IVector target) {
+
+    //Create Position Target Pairs
+    ArrayList<IVector[]> vectorsTargetPairs = new ArrayList<IVector[]>();
+    for (IVector vector : vectors) {
+      vectorsTargetPairs.add(new IVector[]{vector, target});
+    }
+
+    //Sort by distance from Position to Target.
+    Collections.sort(vectorsTargetPairs, new CompareIVectorByDistance());
+
+    //Convert sorted pairs to Position list.
+    ArrayList<IVector> vectorsSorted = new ArrayList<IVector>();
+    for (IVector[] vectorTargetPair : vectorsTargetPairs) {
+      vectorsSorted.add(vectorTargetPair[0]);
+    }
+    
+    return vectorsSorted;
   }
 }

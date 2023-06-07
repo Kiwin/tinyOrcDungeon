@@ -1,16 +1,18 @@
 public class OrcEntity extends HumanoidEntity {
 
   AI<OrcEntity> AI;
-  private int moveTurnOffset;
 
   public OrcEntity(int x, int y) {
     super(x, y, 1, 1, Race.ORC, Team.Enemy);
-    AI = new OrcAISimple();
+    if (random(1) < 0.1) {
+      AI = new OrcAIHunter(this, GAME.player);
+    } else {
+      AI = new OrcAISimple();
+    }
     generateEquipment();
   }
 
-  void generateEquipment() {
-    moveTurnOffset = round(random(1));
+  private void generateEquipment() {
     float ran = random(1);
     if (ran <= 0.25) {
       this.helmet = new Helmet(Material.WOOD);
@@ -38,24 +40,51 @@ interface AI<T> {
   void run(T actor, int turnCount);
 }
 
-/*class OrcAIHunter implements AI<OrcEntity> {
+public class OrcAIHunter implements AI<OrcEntity> {
+
+  private int moveTurnOffset;
+  private int moveCooldown = 2;
+  private GameObject target;
+
+  public OrcAIHunter(OrcEntity orc, GameObject target) {
+    this.target = target;
+    moveTurnOffset = round(random(moveCooldown));
+    orc.setTeamCertain(false);
+    orc.setRaceCertain(false);
+  }
+
   public void run(OrcEntity orc, int turnCount) {
-    if ((turnCount + orc.moveTurnOffset) % 2 ==  0) { //Checks if should move this round.
-      int checks = 0;
-      IVector[] directions = new IVector[] {new IVector(1, 0), new IVector( -1, 0), new IVector(0, 1), new IVector(0, -1)};
-      IVector bestDirection;
+    if ((turnCount + moveTurnOffset) % moveCooldown ==  0) {
+      ArrayList<IVector> moves = new ArrayList<IVector>();
+      moves.add(new IVector(1, 0).add(orc.getPosition()));
+      moves.add(new IVector( -1, 0).add(orc.getPosition()));
+      moves.add(new IVector(0, 1).add(orc.getPosition()));
+      moves.add(new IVector(0, -1).add(orc.getPosition()));
+      ArrayList<IVector> movesSorted = IVectorHelper.sortByDistance(moves, target.getPosition());
+      while (movesSorted.size() > 0) {
+        if (orc.moveOrAttack(movesSorted.get(0), GAME.tileMap)) break;
+        movesSorted.remove(0);
+      }
     }
   }
-}*/
+}
 
-class OrcAISimple implements AI<OrcEntity> {
+public class OrcAISimple implements AI<OrcEntity> {
+
+  private int moveTurnOffset;
+  private int moveCooldown = 2;
+
+  public OrcAISimple() {
+    moveTurnOffset = round(random(moveCooldown));
+  }
+
   public void run(OrcEntity orc, int turnCount) {
-    if ((turnCount + orc.moveTurnOffset) % 2 ==  0) { //Checks if should move this round.
+    if ((turnCount + moveTurnOffset) % moveCooldown ==  0) { //Checks if should move this round.
       int checks = 0;
       IVector direction;
-      IVector[] directions = new IVector[] {new IVector(1, 0), new IVector( -1, 0), new IVector(0, 1), new IVector(0, -1), new IVector(0, 0)};
+      IVector[] moves = new IVector[] {new IVector(1, 0), new IVector( -1, 0), new IVector(0, 1), new IVector(0, -1), new IVector(0, 0)};
       do {
-        direction = directions[round(random(directions.length - 1))];
+        direction = moves[round(random(moves.length - 1))];
         checks++;
       } while (!orc.moveOrAttackRelative(direction, GAME.tileMap) && checks < 20);
     }

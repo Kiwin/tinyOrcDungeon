@@ -2,7 +2,7 @@ public abstract class BaseTool extends BaseItem implements Tool {
   
   public final Material primaryMaterial;
   public final Material secondaryMaterial;
-  protected int durability;
+  private int durability;
   public BaseTool(String name, Material primaryMaterial, Material secondaryMaterial) {
     super(name);
     this.primaryMaterial = primaryMaterial;

@@ -4,7 +4,7 @@ class Game { //<>//
   
   //Entity fields
   Human player;
-  final GameObjectHandler objects = new GameObjectHandler();
+  final GameObjectHandler objectHandler = new GameObjectHandler();
   
   //Render fields
   float renderWidth;
@@ -31,9 +31,9 @@ class Game { //<>//
   public int turnCount;
   public void onTurn() {
     if (!GAMEOVER) {
-      objects.onTurnBegin(turnCount);
-      objects.onTurn(turnCount);
-      objects.onTurnEnd(turnCount);
+      objectHandler.onTurnBegin(turnCount);
+      objectHandler.onTurn(turnCount);
+      objectHandler.onTurnEnd(turnCount);
       turnCount++;
       checkForWinCondition();
       checkForGameOverCondition();
@@ -45,11 +45,11 @@ class Game { //<>//
     }
   }
   
-  void start() {
+  public void start() {
     initGame();
   }
   
-  void initGame() {
+  private void initGame() {
     //Variables
     calculateDisplayVariables();
     turnCount = 0;
@@ -60,7 +60,7 @@ class Game { //<>//
     initNewLevel(true, true);
   }
   
-  void initNewMap() {
+  private void initNewMap() {
     //Map
     tileMap = new TileMap(settings.mapWidth, settings.mapHeight);
     //map.randomizeMap(1, tileColors.length-1);
@@ -68,9 +68,9 @@ class Game { //<>//
     tileMap.fillMapEgdes(0, true);
   }
   
-  void initNewLevel(boolean initNewPlayer, boolean killMobs) {
+  private void initNewLevel(boolean initNewPlayer, boolean killMobs) {
     if (killMobs) {
-      GAME.objects.destroyAllObjects();
+      GAME.objectHandler.destroyAllObjects();
     }
     
     if (initNewPlayer) {
@@ -80,10 +80,16 @@ class Game { //<>//
       player.leftHandItem.isFacingRight = false;
       player.helmet = new Helmet(Material.HELLRITE);
     }
-    player.position = new IVector(1, 1);
-    objects.addObject(player);
+    player.setPosition(new IVector(1, 1));
+    objectHandler.addObject(player);
     
-    float enemyPerTile = 0.2;
+    spawnEnemies();
+    
+    checkForWinCondition();
+  }
+  
+  private void spawnEnemies(){
+  float enemyPerTile = 0.2;
     float enemyPerTileFactor = tileMap.getTileCount() * enemyPerTile;
     float enemyCount = floor(enemyPerTileFactor / 2 + random(enemyPerTileFactor / 4));
     println("Spawning", enemyCount, "enemies");
@@ -97,8 +103,8 @@ class Game { //<>//
         position.y = round(random(0, settings.mapHeight - 1));
         triesRemaining--;
         println("attempting to spawn enemy at", position.x, position.y, triesRemaining);
-      } while(triesRemaining > 0 && tileIsOccupied(position, tileMap, objects));
-      objects.addObject(new OrcEntity(position.x, position.y));
+      } while(triesRemaining > 0 && tileIsOccupied(position, tileMap, objectHandler));
+      objectHandler.addObject(new OrcEntity(position.x, position.y));
       if (triesRemaining > 0) {
         println("Enemy spawned", position.x, position.y, triesRemaining);
       } else {
@@ -106,12 +112,10 @@ class Game { //<>//
       }
       println("Enemies left to spawn:", enemyCount - i - 1);
     }
-    
-    checkForWinCondition();
   }
   
   //Method that calculates where to display the map in the screen.
-  void calculateDisplayVariables() {
+  private void calculateDisplayVariables() {
     float renderWidth = width;
     float renderHeight = height;
     
@@ -131,33 +135,33 @@ class Game { //<>//
     tileHeight = tileSize;
   }
   
-  void checkForGameOverCondition() {
+  private void checkForGameOverCondition() {
     GAMEOVER = !player.isAlive();
   }
   
-  void checkForWinCondition() {
-    VICTORY = objects.getObjectCount() == 1;
+  private void checkForWinCondition() {
+    VICTORY = objectHandler.getObjectCount() == 1;
   }
   
   
-  void update() {
-    objects.update();
+  public void update() {
+    objectHandler.update();
   }
-  void render() {
+  public void render() {
     background(64);
     mapRenderer.render(tileMap, mapOffsetX, mapOffsetY, tileWidth, tileHeight, settings.tileColors);
     drawExitDoor();
-    objects.render(mapOffsetX, mapOffsetY, tileWidth, tileHeight);
+    objectHandler.render(mapOffsetX, mapOffsetY, tileWidth, tileHeight);
     drawHealthBar(tileWidth * 0.2, tileHeight * 0.2, tileWidth * 0.8, tileHeight * 0.8);
   }
   
-  void drawExitDoor() {
+  private void drawExitDoor() {
     fill(#984310);
     noStroke();
     rect((settings.mapWidth - 2) * tileWidth + mapOffsetX,(settings.mapHeight - 2) * tileHeight + mapOffsetY, tileWidth, tileHeight);
   }
   
-  public void drawHealthBar(float x, float y, float w, float h) {
+  private void drawHealthBar(float x, float y, float w, float h) {
     float w2 = w * 0.9;
     pushMatrix();
     translate(x, y);

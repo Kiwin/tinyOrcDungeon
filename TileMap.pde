@@ -1,10 +1,10 @@
 public class TileMap {
 
-  public final int width; //Describes the amount of tiles on the horizontal axis. 
+  public final int width; //Describes the amount of tiles on the horizontal axis.
   public final int height; //Describes the amount of tiles on the vertical axis.
-  protected BaseTile[][] map; //Two-dimensional array for storing Tile-Objects.
+  private BaseTile[][] map; //Two-dimensional array for storing Tile-Objects.
 
-  //Class Constructor 
+  //Class Constructor
   public TileMap(int width, int height) {
     this.width = width;
     this.height = height;
@@ -50,9 +50,12 @@ public class TileMap {
   public BaseTile getTile(IVector vector) {
     return map[vector.x][vector.y];
   }
-  
-  public int getTileCount(){
+  public int getTileCount() {
     return this.width * this.height;
+  }
+  public boolean isPositionInBounds(IVector position) {
+    return 0 <= position.x && position.x <= width 
+        && 0 <= position.y && position.y <= height;
   }
 }
 
