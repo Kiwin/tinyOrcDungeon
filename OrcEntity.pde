@@ -56,10 +56,10 @@ public class OrcAIHunter implements AI<OrcEntity> {
   public void run(OrcEntity orc, int turnCount) {
     if ((turnCount + moveTurnOffset) % moveCooldown ==  0) {
       ArrayList<IVector> moves = new ArrayList<IVector>();
-      moves.add(new IVector(1, 0).add(orc.getPosition()));
-      moves.add(new IVector( -1, 0).add(orc.getPosition()));
-      moves.add(new IVector(0, 1).add(orc.getPosition()));
-      moves.add(new IVector(0, -1).add(orc.getPosition()));
+      moves.add(orc.getPosition().copy().add(1, 0));
+      moves.add(orc.getPosition().copy().add( -1, 0));
+      moves.add(orc.getPosition().copy().add(0, 1));
+      moves.add(orc.getPosition().copy().add(0, -1));
       ArrayList<IVector> movesSorted = IVectorHelper.sortByDistance(moves, target.getPosition());
       while (movesSorted.size() > 0) {
         if (orc.moveOrAttack(movesSorted.get(0), GAME.tileMap)) break;
