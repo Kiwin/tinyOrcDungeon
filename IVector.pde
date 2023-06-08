@@ -17,6 +17,11 @@ class IVector {
   public IVector copy() {
     return new IVector(this.x, this.y);
   }
+  public IVector add(int x, int y){
+    this.x += x;
+    this.y += y;
+    return this;
+  }
   public IVector add(IVector other) {
     this.x += other.x;
     this.y += other.y;
@@ -27,9 +32,19 @@ class IVector {
     this.y -= other.y;
     return this;
   }
+  public IVector sub(int x, int y){
+    this.x -= x;
+    this.y -= y;
+    return this;
+  }
   public IVector mult(IVector other) {
     this.x *= other.x;
     this.y *= other.y;
+    return this;
+  }
+  public IVector mult(int scalar) {
+    this.x *= scalar;
+    this.y *= scalar;
     return this;
   }
   public IVector div(IVector other) {
@@ -37,12 +52,7 @@ class IVector {
     this.y /= other.y;
     return this;
   }
-  public IVector multScalar(int scalar) {
-    this.x *= scalar;
-    this.y *= scalar;
-    return this;
-  }
-  public IVector divScalar(int scalar) {
+  public IVector div(int scalar) {
     this.x /= scalar;
     this.y /= scalar;
     return this;
