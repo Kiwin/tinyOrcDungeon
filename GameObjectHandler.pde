@@ -76,7 +76,7 @@ public class GameObjectHandler {
   //If no GameObject is found it will return null
   public GameObject getObjectAt(IVector position) {
     for (GameObject obj : objects) {
-      if (obj.position.equals(position)) {
+      if (obj.tilePosition.equals(position)) {
         return obj;
       }
     }

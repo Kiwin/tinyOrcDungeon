@@ -1,10 +1,10 @@
-public abstract class GameObject {
+public abstract class GameObject implements Displayable {
 
   //Meta fields
   public boolean deleteable;
 
   //Position fields
-  private IVector position;
+  private IVector tilePosition;
   private PVector renderPosition;
 
   //Combat fields
@@ -20,8 +20,8 @@ public abstract class GameObject {
   public Team team;
 
   public GameObject(int x, int y, int hp, int str, Race race, Team team) {
-    this.position = new IVector(x, y);
-    this.renderPosition = position.toPVector();
+    this.tilePosition = new IVector(x, y);
+    this.renderPosition = tilePosition.toPVector();
     this.healable = true;
     this.health = hp;
     this.healthMax = hp;
@@ -76,14 +76,14 @@ public abstract class GameObject {
   }
 
   public boolean moveOrAttackRelative(IVector newPosition, TileMap tileMap) {
-    return moveOrAttack(newPosition.copy().add(position), tileMap);
+    return moveOrAttack(newPosition.copy().add(tilePosition), tileMap);
   }
 
   //Method that moves the GameObject in a direction if possible.
   //Method returns if the player successfully performed the action.
   public boolean moveTo(IVector newPosition, TileMap tileMap) {
     if (this.canMoveTo(newPosition, tileMap)) { //Can move to new position.
-      this.position = newPosition;
+      this.tilePosition = newPosition;
       return true;
     } else { //Can't move to new position.
       return false;
@@ -101,7 +101,7 @@ public abstract class GameObject {
   }
 
   private void onAttack(GameObject target) {
-    renderPosition.add(target.position.toPVector()).div(2);
+    renderPosition.add(target.tilePosition.toPVector()).div(2);
   }
   //---Getters and Setters---//
   public int getHealth() {
@@ -113,11 +113,11 @@ public abstract class GameObject {
   }
 
   public IVector getPosition() {
-    return this.position.copy();
+    return this.tilePosition.copy();
   }
 
   public void setPosition(IVector position) {
-    this.position = position;
+    this.tilePosition = position;
   }
 
   public PVector getRenderPosition() {
@@ -132,20 +132,33 @@ public abstract class GameObject {
     return this.teamCertain;
   }
 
-  
-  public void setTeamCertain(boolean isTeamCertain){
+
+  public void setTeamCertain(boolean isTeamCertain) {
     this.teamCertain = isTeamCertain;
   }
-  
+
   public boolean isRaceCertain() {
     return this.raceCertain;
   }
 
-  public void setRaceCertain(boolean isRaceCertain){
+  public void setRaceCertain(boolean isRaceCertain) {
     this.raceCertain = isRaceCertain;
   }
 
+  public PVector getDisplayPosition() {
+    return this.renderPosition;
+  }
+  public float getDisplayWidth() {
+    return GAME.tileWidth;
+  }
+  public float getDisplayHeight() {
+    return GAME.tileHeight;
+  }
+
   //---Abstract methods---//
+  public int getStrengthMin() {
+    return 0;
+  }
   public abstract int getStrength();
   public abstract int getArmor();
   public abstract void update();
@@ -156,4 +169,10 @@ public abstract class GameObject {
   public abstract void onTurnBegin(int turnCount); //Should be called first and once when a turn ends.
   public abstract void onTurn(int turnCount); //Should be called once between onTurnBegin and onTurnEnd is called.
   public abstract void onTurnEnd(int turnCount); //Should be called last and once when a turn ends.
+}
+
+public interface Displayable {
+  PVector getDisplayPosition();
+  float getDisplayWidth();
+  float getDisplayHeight();
 }

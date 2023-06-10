@@ -15,6 +15,7 @@ class Game { //<>//
   float mapDisplayHeight;
   float tileWidth; //Variable that describes the width of a tile;
   float tileHeight; //Variable that describes the height of a tile;
+  ArrayList<StatOverlay> statOverlays = new ArrayList<StatOverlay>();
   
   public Game(GameSettings settings) {
     this.settings = settings;
@@ -79,6 +80,10 @@ class Game { //<>//
       player.leftHandItem = new Axe(Material.WOOD, Material.WOOD);
       player.leftHandItem.isFacingRight = false;
       player.helmet = new Helmet(Material.HELLRITE);
+      
+      StatOverlay playerStatOverlay = new StatOverlay(player, player);
+      playerStatOverlay.shouldPositionRelativeToObject(false);
+      statOverlays.add(playerStatOverlay);
     }
     player.setPosition(new IVector(1, 1));
     objectHandler.addObject(player);
@@ -143,7 +148,6 @@ class Game { //<>//
     VICTORY = objectHandler.getObjectCount() == 1;
   }
   
-  
   public void update() {
     objectHandler.update();
   }
@@ -152,56 +156,17 @@ class Game { //<>//
     mapRenderer.render(tileMap, mapOffsetX, mapOffsetY, tileWidth, tileHeight, settings.tileColors);
     drawExitDoor();
     objectHandler.render(mapOffsetX, mapOffsetY, tileWidth, tileHeight);
-    drawHealthBar(tileWidth * 0.2, tileHeight * 0.2, tileWidth * 0.8, tileHeight * 0.8);
+    
+    //GUI
+    for(StatOverlay overlay : statOverlays){
+      overlay.render();
+    }
   }
   
   private void drawExitDoor() {
     fill(#984310);
     noStroke();
     rect((settings.mapWidth - 2) * tileWidth + mapOffsetX,(settings.mapHeight - 2) * tileHeight + mapOffsetY, tileWidth, tileHeight);
-  }
-  
-  private void drawHealthBar(float x, float y, float w, float h) {
-    float w2 = w * 0.9;
-    pushMatrix();
-    translate(x, y);
-    
-    for (int i = 0; i < player.getHealth(); i++) {
-      //Draw Hearts
-      float x2 = w2 * i;
-      if (i == player.getHealth() - 1 && player.getArmor() == 0) {
-        float n = sin(frameCount * 0.1) * 30;
-        fill(164 + n, n, n);
-      } else {
-        fill(#880000);
-      }
-      beginShape();
-      vertex(x2 + w * 0.25, 0);
-      vertex(x2 + w * 0.5, h * 0.25);
-      vertex(x2 + w * 0.75, 0);
-      vertex(x2 + w, h * 0.50);
-      vertex(x2 + w * 0.5, h);
-      vertex(x2, h * 0.50);
-      endShape(CLOSE);
-    }
-    
-    //Draw Shields
-    for (int i = player.getHealth(); i < player.getHealth() + player.getArmor(); i++) {
-      float x2 = w2 * i;
-      float c = 120 + i * 20;
-      if (i == player.getHealth() + player.getArmor() - 1) {
-        float n = sin(frameCount * 0.1) * 15;
-        c += n;
-      }
-      fill(c);
-      beginShape();
-      vertex(x2 + w * 0.5, 0);
-      vertex(x2 + 0, h * 0.5);
-      vertex(x2 + w * 0.5, h);
-      vertex(x2 + w, h * 0.5);
-      endShape(CLOSE);
-    }
-    popMatrix();
   }
   
   public void onKeyPressed(char key) {

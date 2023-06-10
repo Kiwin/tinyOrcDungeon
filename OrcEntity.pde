@@ -43,7 +43,7 @@ interface AI<T> {
 public class OrcAIHunter implements AI<OrcEntity> {
 
   private int moveTurnOffset;
-  private int moveCooldown = 2;
+  private int moveCooldown = 3;
   private GameObject target;
 
   public OrcAIHunter(OrcEntity orc, GameObject target) {
