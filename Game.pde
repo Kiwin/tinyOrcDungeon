@@ -1,6 +1,6 @@
 class Game { //<>//
   
-  GameSettings settings;
+  public GameSettings settings;
   
   //Entity fields
   Human player;
@@ -62,11 +62,9 @@ class Game { //<>//
   }
   
   private void initNewMap() {
-    //Map
-    tileMap = new TileMap(settings.mapWidth, settings.mapHeight);
-    //map.randomizeMap(1, tileColors.length-1);
-    tileMap.fillMapTiled(1, 2);
-    tileMap.fillMapEgdes(0, true);
+    RandomWalkMapGenerator generator = new RandomWalkMapGenerator();
+    tileMap = generator.generateMap(settings.mapWidth,settings.mapHeight);
+    tileMap.fillMapEgdes(TileType.REGULAR, true);
   }
   
   private void initNewLevel(boolean initNewPlayer, boolean killMobs) {
@@ -88,12 +86,12 @@ class Game { //<>//
     player.setPosition(new IVector(1, 1));
     objectHandler.addObject(player);
     
-    spawnEnemies();
+    spawnEnemies(tileMap);
     
     checkForWinCondition();
   }
   
-  private void spawnEnemies(){
+  private void spawnEnemies(TileMap map){
   float enemyPerTile = 0.2;
     float enemyPerTileFactor = tileMap.getTileCount() * enemyPerTile;
     float enemyCount = floor(enemyPerTileFactor / 2 + random(enemyPerTileFactor / 4));
@@ -104,14 +102,14 @@ class Game { //<>//
       IVector position = new IVector();
       int triesRemaining = 10;
       do {
-        position.x = round(random(0, settings.mapWidth - 1));
-        position.y = round(random(0, settings.mapHeight - 1));
+        position.x = round(random(0, map.width - 1));
+        position.y = round(random(0, map.height - 1));
         triesRemaining--;
         println("attempting to spawn enemy at", position.x, position.y, triesRemaining);
       } while(triesRemaining > 0 && tileIsOccupied(position, tileMap, objectHandler));
       objectHandler.addObject(new OrcEntity(position.x, position.y));
       if (triesRemaining > 0) {
-        println("Enemy spawned", position.x, position.y, triesRemaining);
+        println("Enemy spawned", position.x, position.y);
       } else {
         println("Failed to spawn enemy");
       }
@@ -153,7 +151,7 @@ class Game { //<>//
   }
   public void render() {
     background(64);
-    mapRenderer.render(tileMap, mapOffsetX, mapOffsetY, tileWidth, tileHeight, settings.tileColors);
+    mapRenderer.render(tileMap, mapOffsetX, mapOffsetY, tileWidth, tileHeight);
     drawExitDoor();
     objectHandler.render(mapOffsetX, mapOffsetY, tileWidth, tileHeight);
     
