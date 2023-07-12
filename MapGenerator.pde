@@ -1,19 +1,26 @@
+import java.util.function.Consumer;
+
 interface MapGenerator {
   TileMap generateMap(int mapWidth, int mapHeight);
 }
 
 class RandomWalkMapGeneratorAgent {
 
-  TileMap map;
-  IVector position;
-  int stepsRemaining;
-  TileType tileType;
+  private TileMap map;
+  private IVector position;
+  private int stepsRemaining;
+  private TileType tileType;
+  private boolean placeDoorOnCompletion = false;
 
   RandomWalkMapGeneratorAgent(TileMap map, IVector position, TileType tileType, int steps) {
     this.map = map;
     this.position = position;
     this.tileType = tileType;
     this.stepsRemaining = steps;
+  }
+
+  public void shouldPlaceDoorOnCompletion(boolean value) {
+    this.placeDoorOnCompletion = value;
   }
 
   public boolean isDone() {
@@ -24,7 +31,7 @@ class RandomWalkMapGeneratorAgent {
     final IVector[] directions =
       {
       new IVector(1, 0),
-      new IVector(-1, 0),
+      new IVector( -1, 0),
       new IVector(0, 1),
       new IVector(0, -1),
     };
@@ -42,6 +49,16 @@ class RandomWalkMapGeneratorAgent {
     tile.setColor(GAME.settings.tileColors[1]);
     map.setTile(tile, position);
     stepsRemaining--;
+    
+    if(isDone()){
+      onCompletion();
+    }
+  }
+
+  private void onCompletion() {
+    if (placeDoorOnCompletion) {
+      GAME.setExitDoorPosition(this.position);
+    }
   }
 }
 
@@ -68,8 +85,13 @@ class RandomWalkMapGenerator implements MapGenerator {
     map.setTile(new BaseTile(TileType.REGULAR, false), startPosition.copy());
 
     ArrayList<RandomWalkMapGeneratorAgent> agents = new ArrayList<RandomWalkMapGeneratorAgent>();
-    for (int i = 0; i < agentCount; i++) agents.add(new RandomWalkMapGeneratorAgent(map, startPosition.copy(), TileType.REGULAR, agentSteps));
-
+    for (int i = 0; i < agentCount; i++) {
+      RandomWalkMapGeneratorAgent agent = new RandomWalkMapGeneratorAgent(map, startPosition.copy(), TileType.REGULAR, agentSteps);
+      agents.add(agent);
+      if (i == 0) {
+        agent.shouldPlaceDoorOnCompletion(true);
+      }
+    }
     for (RandomWalkMapGeneratorAgent agent : agents) {
       while (!agent.isDone()) agent.runStep();
     }
