@@ -1,4 +1,4 @@
-# tinyMonsterDungeon (or `tod`)
+# tinyOrcDungeon (or `tod`)
 A Processing game - still work in progress..
 
 # How to play
